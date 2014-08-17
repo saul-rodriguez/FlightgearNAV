@@ -1,0 +1,169 @@
+/*
+ * Copyright (C) 2014  Saul Rodriguez
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    
+    NOTE: this class is a modified version of GPL code available at https://github.com/Juanvvc/FlightGearMap
+ * 
+ */
+
+
+package com.rodriguez.saul.flightgearpfd;
+
+import java.util.Date;
+
+import android.util.Log;
+
+public class MessageHandlerFGFS {
+	String[] data;
+	String[] outData;
+	private Date date = new Date();
+	//private MovingAverage[] averages;
+	
+	public MessageHandlerFGFS() 
+	{
+		data = null;	
+		
+	}
+	
+	public void parse(final String input) 
+	{
+		// strip string with new line
+		String realInput = input.substring(0, input.indexOf("\n"));
+		data = realInput.split(":");
+
+		date = new Date();
+
+		// check that we have the desired number of parameters
+		// just read the last data. If throws IndexOutOfBounds, the
+		// other extreme is sending wrong data
+				
+		//getFloat(MAXSPEED);
+	}
+	
+	public static final int HEADING = 0; // heading in degrees
+	public static final int APHEADING = 1; // AP heading bug
+	
+	public static final int VORLID = 2;
+	public static final int VORLDME = 3;
+	public static final int VORLDMEINRANGE = 4;
+	public static final int VORLINRANGE = 5;
+	public static final int VORLFREQ = 6;
+	public static final int SWITCHLEFT = 7;
+	public static final int VORLDIR = 8;
+	
+	public static final int VORRID = 9;
+	public static final int VORRDME = 10;
+	public static final int VORRDMEINRANGE = 11;
+	public static final int VORRINRANGE = 12;
+	public static final int VORRFREQ = 13;
+	public static final int SWITCHRIGHT = 14;
+	public static final int VORRDIR = 15;
+	
+	public static final int ADFLID = 16;
+	public static final int ADFLINRANGE = 17;
+	public static final int ADFLFREQ = 18;
+	public static final int ADFLDIR = 19;
+	
+	public static final int ADFRID = 20;
+	public static final int ADFRINRANGE = 21;
+	public static final int ADFRFREQ = 22;
+	public static final int ADFRDIR = 23;
+	
+	public static final int RADIALDIR = 24;
+	public static final int RADIALHEAD = 25;
+	public static final int RADIALDEF = 26;
+	
+	/*
+	public static final int SPEED = 0; // speed, in knots
+	public static final int ALTITUDE = 1; // altitude, in feet, according to the instruments
+	public static final int VS = 2; //vertical speed (rate of climb) in fpm (needs to be transformed to fps!)
+	public static final int PITCH = 3; //pitch angle degrees
+	public static final int ROLL = 4; //roll angle in degrees	
+	public static final int HEADING = 5; // heading in degrees
+	public static final int NAV1QUALITY = 6; // is a selected NAV localizer in range? 
+	public static final int NAV1LOC = 7; //is the selected NAV present?
+	public static final int NAV1DEF = 8; // NAV1 normalizedr deflection (-1 to 1)
+	public static final int GSACTIVATED = 9; // is the glideslope activated?
+	public static final int GSINRANGE = 10; // is the glideslope in range?
+	public static final int GSDEF = 11; // glideslope normalized deflection (-1 to 1)
+	public static final int RADIOALTIMETER = 12; // ground altitude in feet (int)
+	public static final int MACHSPEED = 13; // mach speed, ground referred?
+	public static final int STALLSPEED = 14; // minimum speed
+	public static final int STALLWARNING = 15; // minimum speed
+	public static final int FLAPS = 16; //flap status (float)
+	public static final int MAXSPEED = 17; //flap status (float)
+	public static final int AP = 18; // autopilot status (Activated/deactivated)
+	public static final int PITCHMODE = 19; //AP Pitch conf. status
+	public static final int ROLLMODE = 20; //AP Roll conf. status
+	public static final int SPEEDMODE = 21; //AP Roll conf. status
+	public static final int APALTITUDE = 22; //AP set altitude
+	public static final int APACTUALALT = 23; //AP actual altitude
+	public static final int APSPEED = 24; // AP set speed
+	public static final int APHEADING = 25; // AP heading bug
+	public static final int DMEINRANGE = 26; // DME in range ?
+	public static final int DME = 27;
+	*/
+	
+	public int getInt(int i) 
+	{
+		if (data == null) {
+			return 0;
+		}
+		return Integer.valueOf(data[i]);
+	}
+
+	public float getFloat(int i) 
+	{
+		if (data == null) {
+			return 0;
+		}
+		//MovingAverage ma = this.averages[i];
+		//if (ma==null) {
+		//return Float.valueOf(data[i]);
+		//} else {
+		//return ma.getData(Float.valueOf(data[i]));
+		//}
+		return Float.valueOf(data[i]);
+	}
+
+	public String getString(int i) 
+	{
+		if (data == null) {
+			return "";
+		}
+//		Log.d("Saul getstring index", String.format("%d", i));
+//		Log.d("Saul getstring String: ",data[i]);
+		return data[i];
+	}
+
+	public boolean getBool(int i)
+	{
+		if (data == null) {
+			return false;
+		}
+		return data[i].equals("1");
+	}
+
+	public Date getDate() 
+	{
+		return date;
+	}
+
+	public boolean hasData() 
+	{
+		return data != null;
+	}
+			
+}
