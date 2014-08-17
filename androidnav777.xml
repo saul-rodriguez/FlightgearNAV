@@ -1,0 +1,217 @@
+<?xml version="1.0"?>
+
+<PropertyList>
+
+ <generic>
+
+  <output>
+   <line_separator>newline</line_separator>
+   <var_separator>:</var_separator>
+
+<!--
+   <chunk>
+    <name>heading</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/orientation/heading-deg</node>
+   </chunk>
+-->
+
+   <chunk>
+    <name>heading</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/orientation/heading-magnetic-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>AP heading bug</name>
+    <format>%d</format>
+    <node>/autopilot/settings/heading-bug-deg</node>
+   </chunk>
+
+<!-- NAV1 starts here -->
+   <chunk>
+    <name>NAV1 ID</name>
+    <type>string</type>
+    <format>%s</format>
+    <node>/instrumentation/nav/nav-id</node>
+   </chunk>
+
+   <chunk>
+    <name>NAV1 DME</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/instrumentation/nav/nav-distance</node>
+   </chunk>
+
+   <chunk>
+    <name>NAV1 DME in range</name>
+    <type>bool</type>
+    <node>/instrumentation/nav/dme-in-range</node>
+   </chunk>
+
+   <chunk>
+    <name>NAV1 in range</name>
+    <type>bool</type>
+    <node>/instrumentation/nav/in-range</node>
+   </chunk>
+
+   <chunk>
+    <name>NAV1 DME</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/instrumentation/nav/frequencies/selected-mhz</node>
+   </chunk>
+
+   <chunk>
+    <name>switch left VOR ADF</name>
+    <format>%d</format>
+    <node>/instrumentation/efis/inputs/lh-vor-adf</node>
+   </chunk>
+
+   <chunk>
+    <name>NAV1 direction</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/instrumentation/efis/mfd/lvordirection</node>
+   </chunk>
+
+<!-- NAV1 ends here -->
+
+<!-- NAV2 starts here -->
+   <chunk>
+    <name>NAV1 ID</name>
+    <type>string</type>
+    <format>%s</format>
+    <node>/instrumentation/nav[1]/nav-id</node>
+   </chunk>
+
+   <chunk>
+    <name>NAV1 DME</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/instrumentation/nav[1]/nav-distance</node>
+   </chunk>
+
+   <chunk>
+    <name>NAV1 DME in range</name>
+    <type>bool</type>
+    <node>/instrumentation/nav[1]/dme-in-range</node>
+   </chunk>
+
+   <chunk>
+    <name>NAV1 in range</name>
+    <type>bool</type>
+    <node>/instrumentation/nav[1]/in-range</node>
+   </chunk>
+
+   <chunk>
+    <name>NAV1 DME</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/instrumentation/nav[1]/frequencies/selected-mhz</node>
+   </chunk>
+
+   <chunk>
+    <name>switch left VOR ADF</name>
+    <format>%d</format>
+    <node>/instrumentation/efis/inputs/rh-vor-adf</node>
+   </chunk>
+
+   <chunk>
+    <name>NAV1 direction</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/instrumentation/efis/mfd/rvordirection</node>
+   </chunk>
+
+<!-- NAV2 starts here -->
+
+<!-- ADF1 starts here -->
+   <chunk>
+    <name>ADF1 ID</name>
+    <type>string</type>
+    <format>%s</format>
+    <node>/instrumentation/adf/ident</node>
+   </chunk>
+
+   <chunk>
+    <name>ADF1 in range</name>
+    <type>bool</type>
+    <node>/instrumentation/adf/in-range</node>
+   </chunk>
+
+   <chunk>
+    <name>ADF1 freq</name>
+    <format>%d</format>
+    <node>/instrumentation/adf/frequencies/selected-khz</node>
+   </chunk>
+
+   <chunk>
+    <name>ADF1 direction</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/instrumentation/efis/mfd/ladfdirection</node>
+   </chunk>
+
+<!-- ADF1 ends here -->
+
+<!-- ADF2 starts here -->
+   <chunk>
+    <name>ADF1 ID</name>
+    <type>string</type>
+    <format>%s</format>
+    <node>/instrumentation/adf[1]/ident</node>
+   </chunk>
+
+   <chunk>
+    <name>ADF1 in range</name>
+    <type>bool</type>
+    <node>/instrumentation/adf[1]/in-range</node>
+   </chunk>
+
+   <chunk>
+    <name>ADF1 freq</name>
+    <format>%d</format>
+    <node>/instrumentation/adf[1]/frequencies/selected-khz</node>
+   </chunk>
+
+   <chunk>
+    <name>ADF1 direction</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/instrumentation/efis/mfd/radfdirection</node>
+   </chunk>
+
+<!-- ADF2 ends here -->
+
+<!-- VOR1 starts here -->
+
+   <chunk>
+    <name>Radial direction</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/instrumentation/nav/radials/selected-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>Real heading</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/orientation/heading-deg</node>    
+   </chunk>
+
+   <chunk>
+    <name>Nav1 heading deflection </name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/instrumentation/nav/heading-needle-deflection-norm</node>
+   </chunk>	
+<!-- VOR1 ends here -->
+
+  </output>
+
+ </generic>
+
+</PropertyList>
