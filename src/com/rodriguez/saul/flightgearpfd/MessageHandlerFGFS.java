@@ -84,6 +84,7 @@ public class MessageHandlerFGFS {
 	public static final int RADIALDIR = 24;
 	public static final int RADIALHEAD = 25;
 	public static final int RADIALDEF = 26;
+	public static final int GSDEF = 27;
 	
 	/*
 	public static final int SPEED = 0; // speed, in knots

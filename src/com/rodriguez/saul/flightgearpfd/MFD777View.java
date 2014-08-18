@@ -303,6 +303,12 @@ public class MFD777View extends SurfaceView implements SurfaceHolder.Callback {
 	{
 		plane.radialdef = def;
 	}
+	
+	void setGSdef(float def)
+	{
+		plane.gsdef = def;
+	}
+	
 	/*
 	void SetSpeed(float newSpeed) 
 	{

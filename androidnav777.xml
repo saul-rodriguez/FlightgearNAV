@@ -208,7 +208,16 @@
     <format>%f</format>
     <node>/instrumentation/nav/heading-needle-deflection-norm</node>
    </chunk>	
+
+   <chunk>
+    <name>Nav1 gs deflection </name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/instrumentation/nav/gs-needle-deflection-norm</node>
+   </chunk>
+
 <!-- VOR1 ends here -->
+
 
   </output>
 

@@ -234,6 +234,7 @@ public class PanelView extends Activity {
 				mMFD777.setRaddir(values[0].getFloat(MessageHandlerFGFS.RADIALDIR));
 				mMFD777.setRadhead(values[0].getFloat(MessageHandlerFGFS.RADIALHEAD));
 				mMFD777.setRaddef(values[0].getFloat(MessageHandlerFGFS.RADIALDEF));
+				mMFD777.setGSdef(values[0].getFloat(MessageHandlerFGFS.GSDEF));
 				
 				/*
 				mMFD777.SetSpeed(values[0].getFloat(MessageHandlerFGFS.SPEED));

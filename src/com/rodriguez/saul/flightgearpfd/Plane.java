@@ -48,6 +48,7 @@ public class Plane {
 	float radial;
 	float realheading;
 	float radialdef;
+	float gsdef;
 	
 	/*
 	float horizontRollAngle;
