@@ -236,6 +236,18 @@ public class PanelView extends Activity {
 				mMFD777.setRaddef(values[0].getFloat(MessageHandlerFGFS.RADIALDEF));
 				mMFD777.setGSdef(values[0].getFloat(MessageHandlerFGFS.GSDEF));
 				
+				//Modes
+				mMFD777.setMode(values[0].getInt(MessageHandlerFGFS.MODE));
+				mMFD777.setRange(values[0].getInt(MessageHandlerFGFS.RANGE));
+				mMFD777.setModebut(values[0].getBool(MessageHandlerFGFS.MODEBUT));
+				
+				//Speed
+				mMFD777.setTruespeed(values[0].getFloat(MessageHandlerFGFS.TRUESPEED));
+				mMFD777.setGroundpeed(values[0].getFloat(MessageHandlerFGFS.GROUNDSPEED));
+				mMFD777.setWindhead(values[0].getFloat(MessageHandlerFGFS.WINDHEADING));
+				mMFD777.setWindspeed(values[0].getFloat(MessageHandlerFGFS.WINDSPEED));
+				
+				
 				/*
 				mMFD777.SetSpeed(values[0].getFloat(MessageHandlerFGFS.SPEED));
 				mMFD777.setAltitude(values[0].getFloat(MessageHandlerFGFS.ALTITUDE));

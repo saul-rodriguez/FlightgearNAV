@@ -86,6 +86,15 @@ public class MessageHandlerFGFS {
 	public static final int RADIALDEF = 26;
 	public static final int GSDEF = 27;
 	
+	public static final int MODE = 28;
+	public static final int RANGE = 29;
+	public static final int MODEBUT = 30;
+	public static final int TRUESPEED = 31;
+	public static final int GROUNDSPEED = 32;
+	public static final int WINDHEADING = 33;
+	public static final int WINDSPEED = 34;
+	
+	
 	/*
 	public static final int SPEED = 0; // speed, in knots
 	public static final int ALTITUDE = 1; // altitude, in feet, according to the instruments

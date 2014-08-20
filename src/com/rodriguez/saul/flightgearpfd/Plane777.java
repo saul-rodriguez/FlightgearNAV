@@ -38,6 +38,7 @@ public class Plane777 extends Plane {
 	Bitmap defver;
 	Bitmap defnid;
 	Bitmap bug;
+	Bitmap wind;
 		
 	Matrix maskMatrix;
 	Matrix maskfullMatrix;
@@ -59,6 +60,7 @@ public class Plane777 extends Plane {
 	Matrix defverMatrix;
 	Matrix defnidMatrix;
 	Matrix bugMatrix;
+	Matrix windMatrix;
 	
 	Context mContext;
 	
@@ -88,6 +90,7 @@ public class Plane777 extends Plane {
 		defverMatrix = new Matrix();
 		defnidMatrix = new Matrix();
 		bugMatrix = new Matrix();
+		windMatrix = new Matrix();
 		//Load bitmaps
 		
 		mask = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.navmask);
@@ -120,6 +123,8 @@ public class Plane777 extends Plane {
 		
 		defver = Bitmap.createBitmap(symbols, 268, 85, 29, 180);
 		bug = Bitmap.createBitmap(symbols, 352, 27, 37, 58);
+		
+		wind = Bitmap.createBitmap(symbols, 70, 115, 35, 114);
 		
 		//Initialize all the parameters
 		scaleFactor = (float)1.0;
@@ -166,6 +171,20 @@ public class Plane777 extends Plane {
 		radialdef = 0;
 		gsdef = 0;
 		
+		//Encoder Modes
+		mode = 0;
+		range = 10;
+		modebut = false; //false == arc, true == circle
+		
+		//Speed
+		truespeed = 0;
+		groundspeed = 0;
+		
+		//windspeed
+
+		windspeed = 0;
+		windheading = 0;
+		
 	}
 	
 	public void draw(Canvas canvas) {
@@ -174,11 +193,33 @@ public class Plane777 extends Plane {
         paint.setAntiAlias(true);
         paint.setFilterBitmap(true);
         
-		drawHsiArc(canvas, paint);
+        if (modebut == true) { //Circle
+        	
+        } else { //Arc
+        	switch(mode) {
+        		case 0:
+        				drawArc(canvas,paint, 0); //APP
+        				break;
+        		case 1:
+        				drawArc(canvas,paint, 1); //VOR
+        				break;
+        		case 2:
+        				drawArc(canvas,paint, 2); //MAP
+        				break;
+        		case 3:
+        				drawPln(canvas,paint);
+        				break;
+        		default:
+        				break;
+        	}
+        }
+        
+		//drawHsiArc(canvas, paint);
 	
 	}
 	
-	public void drawHsiArc(Canvas canvas, Paint paint) {
+	public void drawArc(Canvas canvas, Paint paint, int curmode)
+	{
 		int offsety = 160; // y offset of the center of the arc 
 		
 		//Prepare the mask
@@ -203,23 +244,13 @@ public class Plane777 extends Plane {
 		//draw mask
 		canvas.drawBitmap(mask,maskMatrix,paint);
 				
-		//Hide borders
-		//paint.setColor(Color.GRAY);
-		paint.setColor(Color.rgb(0xb6, 0xb2, 0xa7));
-		paint.setStyle(Paint.Style.FILL_AND_STROKE);		
-		canvas.drawRect((centerx - 380*scaleFactor), 0, (centerx - 256*scaleFactor), 2*centery, paint);
-		canvas.drawRect((centerx + 256*scaleFactor), 0, (centerx + 380*scaleFactor), 2*centery, paint);
-		paint.setColor(Color.BLACK);
-		canvas.drawRect((centerx - 254*scaleFactor), (centery + offsety*scaleFactor), (centerx + 254*scaleFactor), 2*centery, paint);
-		//Log.d("Saul Scalefactor", String.format("%f", scaleFactor));
-					
 		//Heading text
 		paint.setColor(Color.WHITE);
-		//paint.setStyle(Paint.Style.STROKE);	
+		paint.setStyle(Paint.Style.FILL_AND_STROKE);	
 		paint.setTextSize(24*scaleFactor);
 		paint.setStrokeWidth((int)(1*scaleFactor));
 		paint.setTextAlign(Align.CENTER);
-		//canvas.drawText(String.format("%d", (int)heading), centerx, centery - (int)(300*scaleFactor), paint);
+				
 		if (heading < 10) {
 			canvas.drawText(String.format("00%d", (int)heading), centerx, centery - (int)(210*scaleFactor), paint);
 		} else if (heading < 100) {
@@ -228,28 +259,48 @@ public class Plane777 extends Plane {
 			canvas.drawText(String.format("%d", (int)heading), centerx, centery - (int)(210*scaleFactor), paint);
 		}
 		
-		paint.setColor(Color.GREEN);
 		paint.setTextSize(18*scaleFactor);
+		canvas.drawText(String.format("%d",(range/2)), centerx - (float)(10*scaleFactor), centery - (float)(20*scaleFactor), paint);
+		
+		paint.setColor(Color.BLACK);
+		canvas.drawRect((centerx - 254*scaleFactor), (centery + offsety*scaleFactor), (centerx + 254*scaleFactor), 2*centery, paint);
+		
+		
+		paint.setColor(Color.GREEN);
+		//paint.setTextSize(18*scaleFactor);
 		paint.setStrokeWidth((int)(0.8*scaleFactor));
 		canvas.drawText("TRK", centerx - (int)(50*scaleFactor), centery - (int)(210*scaleFactor), paint);
 		canvas.drawText("MAG", centerx + (int)(55*scaleFactor), centery - (int)(210*scaleFactor), paint);
 		
-		
-		
 		//Draw AP heading
-		drawAPheading(canvas, paint);
+		if (curmode != 0) {
+			drawAPheading(canvas, paint);
+		}
+		
+		
+		//Draw Radial and GS if required
+		if (curmode == 0) {
+			drawRadialARC(canvas,paint);
+			drawGSArc(canvas,paint);	
+		}
+		
+		if (curmode == 1) {
+			drawRadialARC(canvas,paint);
+		}
 		
 		//Draw VORL
+		
 		if (switchvorl == 1) {
-			drawVORL(canvas, paint);
-			drawRadialARC(canvas,paint);
-			drawGSArc(canvas,paint);
+						
+			
+			drawVORL(canvas, paint, curmode);
+			
 		} else if (switchvorl == -1) {
 			drawADFL(canvas, paint);
 		}
 		
 		if (switchvorr == 1) {
-			drawVORR(canvas, paint);
+			drawVORR(canvas, paint, curmode);
 		} else if (switchvorr == -1) {
 			drawADFR(canvas, paint);
 		}
@@ -267,10 +318,6 @@ public class Plane777 extends Plane {
 		paint.setStyle(Style.STROKE);
 		paint.setStrokeWidth((2*scaleFactor));
 		
-		//canvas.drawCircle(centerx, centery + (float)(offsety*scaleFactor), (float)(95*0.9*scaleFactor), paint);
-		//canvas.drawCircle(centerx, centery + (float)(offsety*scaleFactor), (float)(190*0.9*scaleFactor), paint);
-		//canvas.drawCircle(centerx, centery + (float)(offsety*scaleFactor), (float)(285*0.9*scaleFactor), paint);
-		
 		canvas.drawLine(centerx, centery + (float)((offsety - 95*0.9)*scaleFactor) , centerx, centery - (float)(185*scaleFactor), paint);
 		canvas.drawLine(centerx - (float)(10*scaleFactor),
 				centery + (float)((offsety - 95*0.9)*scaleFactor),
@@ -281,16 +328,77 @@ public class Plane777 extends Plane {
 		canvas.drawLine(centerx - (float)(10*scaleFactor),
 				centery + (float)((offsety - 285*0.9)*scaleFactor),
 				centerx + (float)(10*scaleFactor), centery + (float)((offsety - 285*0.9)*scaleFactor), paint);
+	
+		
+		//Draw true speed text 
+		paint.setColor(Color.WHITE);
+		paint.setStyle(Style.FILL_AND_STROKE);
+		paint.setTextSize(18*scaleFactor);
+		paint.setStrokeWidth((int)(0.8*scaleFactor));
+			
+		if (truespeed > 100) { 
+			canvas.drawText(String.format("TAS %d", (int)truespeed), centerx - (int)(130*scaleFactor), centery - (int)(230*scaleFactor), paint);
+		}
+		
+		canvas.drawText(String.format("GS %d", (int)groundspeed), centerx - (int)(200*scaleFactor), centery - (int)(230*scaleFactor), paint);
+		
+		//Draw wind speed and heading
+		drawWind(canvas, paint);
+		
+		//Hide borders
+		paint.setColor(Color.rgb(0xb6, 0xb2, 0xa7));
+		paint.setStyle(Paint.Style.FILL_AND_STROKE);		
+		canvas.drawRect((centerx - 380*scaleFactor), 0, (centerx - 256*scaleFactor), 2*centery, paint);
+		canvas.drawRect((centerx + 256*scaleFactor), 0, (centerx + 380*scaleFactor), 2*centery, paint);
 		
 	}
+	
+	public void drawWind(Canvas canvas, Paint paint)
+	{
+		float rotation = heading - (float)(apheading);
+		
+		String aux;
+				
+		if (windspeed < 10) {
+			aux = String.format("0%d",(int)windspeed);
+		} else {
+			aux = String.format("%d",(int)windspeed);
+		}
+		
+		if (windheading < 10) {
+			canvas.drawText(String.format(" 00%d / ", (int)windheading)+aux, centerx - (int)(200*scaleFactor), centery - (int)(210*scaleFactor), paint);
+		} else if (windheading < 100) {
+			canvas.drawText(String.format(" 0%d / ", (int)windheading)+aux, centerx - (int)(200*scaleFactor), centery - (int)(210*scaleFactor), paint);
+		} else {
+			canvas.drawText(String.format(" %d / ", (int)windheading)+aux, centerx - (int)(200*scaleFactor), centery - (int)(210*scaleFactor), paint);
+		}
+		
+		//prepare and draw Triangle
+	    windMatrix.reset();
+		windMatrix.postTranslate(-wind.getWidth()/2, -wind.getHeight()/2 );
+		windMatrix.postScale((float)(0.25*scaleFactor),(float)(0.25*scaleFactor));
+		windMatrix.postRotate(-rotation + windheading);
+		windMatrix.postTranslate(centerx - (int)(200*scaleFactor), centery - (float)(190*scaleFactor));
+		
+		canvas.drawBitmap(wind, windMatrix, paint);
+		
+		
+	}
+		
+	
+	public void drawPln(Canvas canvas, Paint paint)
+	{
+		
+	}
+	
+	
 	
 	void drawAPheading(Canvas canvas, Paint paint)
 	{
 		int offsety = 160; // y offset of the center of the arc
 		//AP Heading indicator
 		float rotation = heading - (float)(apheading);
-				
-		
+						
 		apheadMatrix.reset();
 		apheadMatrix.postTranslate(-aphead.getWidth()/2, -aphead.getHeight()/2);
 		apheadMatrix.postScale(scaleFactor, scaleFactor);
@@ -314,7 +422,7 @@ public class Plane777 extends Plane {
 		paint.setStyle(Paint.Style.FILL_AND_STROKE);
 	}
 	
-	void drawVORL(Canvas canvas, Paint paint) 
+	void drawVORL(Canvas canvas, Paint paint, int curmode) 
 	{
 		int offsety = 160; // y offset of the center of the arc
 		float dme = (float)(vorldme/1852.);
@@ -334,32 +442,33 @@ public class Plane777 extends Plane {
 			} else {
 				canvas.drawText(String.format("%4.2f",vorlfreq), centerx - (float)(200*scaleFactor), centery + (float)((offsety + 50)*scaleFactor), paint);
 			}
-			canvas.drawText("- - -", centerx - (float)(200*scaleFactor), centery + (float)((offsety + 70)*scaleFactor), paint);
+			canvas.drawText("DME - - -", centerx - (float)(200*scaleFactor), centery + (float)((offsety + 70)*scaleFactor), paint);
 		}
 		
-		//Draw Arrows
-		vorlupMatrix.reset();
-		vorlupMatrix.postTranslate(-vorlup.getWidth()/2, -vorlup.getHeight()/2);
-		vorlupMatrix.postScale((float)(0.7*scaleFactor), (float)(0.7*scaleFactor));
-		vorlupMatrix.postTranslate(0, -(335*scaleFactor));
-		vorlupMatrix.postRotate(vorldirection);
-		vorlupMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+		if (curmode != 0) { 
+			//Draw Arrows
+			vorlupMatrix.reset();
+			vorlupMatrix.postTranslate(-vorlup.getWidth()/2, -vorlup.getHeight()/2);
+			vorlupMatrix.postScale((float)(0.7*scaleFactor), (float)(0.7*scaleFactor));
+			vorlupMatrix.postTranslate(0, -(335*scaleFactor));
+			vorlupMatrix.postRotate(vorldirection);
+			vorlupMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
 		
-		canvas.drawBitmap(vorlup, vorlupMatrix, paint);
+			canvas.drawBitmap(vorlup, vorlupMatrix, paint);
 		
-		//Draw Arrows
-		vorlbackMatrix.reset();
-		vorlbackMatrix.postTranslate(-vorlback.getWidth()/2, -vorlback.getHeight()/2);
-		vorlbackMatrix.postScale((float)(0.7*scaleFactor), (float)(0.7*scaleFactor));
-		vorlbackMatrix.postTranslate(0, + (335*scaleFactor));
-		vorlbackMatrix.postRotate(vorldirection);
-		vorlbackMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+			//Draw Arrows
+			vorlbackMatrix.reset();
+			vorlbackMatrix.postTranslate(-vorlback.getWidth()/2, -vorlback.getHeight()/2);
+			vorlbackMatrix.postScale((float)(0.7*scaleFactor), (float)(0.7*scaleFactor));
+			vorlbackMatrix.postTranslate(0, + (335*scaleFactor));
+			vorlbackMatrix.postRotate(vorldirection);
+			vorlbackMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
 				
-		canvas.drawBitmap(vorlback, vorlbackMatrix, paint);
-		
+			canvas.drawBitmap(vorlback, vorlbackMatrix, paint);
+		}
 	}
 	
-	void drawVORR(Canvas canvas, Paint paint) 
+	void drawVORR(Canvas canvas, Paint paint, int curmode) 
 	{
 		int offsety = 160; // y offset of the center of the arc
 		float dme = (float)(vorrdme/1852.);
@@ -370,7 +479,8 @@ public class Plane777 extends Plane {
 		
 		canvas.drawText("VOR R", centerx + (float)(200*scaleFactor), centery + (float)((offsety + 30)*scaleFactor), paint);
 		
-		if ((vorrdmeinrange == true) && (vorrinrange == true)) { 
+		//if ((vorrdmeinrange == true) && (vorrinrange == true)) { 
+		if ((vorrinrange == true)) {
 			canvas.drawText(vorrid, centerx + (float)(200*scaleFactor), centery + (float)((offsety + 50)*scaleFactor), paint);
 			canvas.drawText(String.format("DME %3.1f", dme), centerx + (float)(200*scaleFactor), centery + (float)((offsety + 70)*scaleFactor), paint);
 		} else {
@@ -379,30 +489,30 @@ public class Plane777 extends Plane {
 			} else {
 				canvas.drawText(String.format("%4.2f",vorrfreq), centerx + (float)(200*scaleFactor), centery + (float)((offsety + 50)*scaleFactor), paint);
 			}
-			canvas.drawText("- - -", centerx + (float)(200*scaleFactor), centery + (float)((offsety + 70)*scaleFactor), paint);
+			canvas.drawText("DME - - -", centerx + (float)(200*scaleFactor), centery + (float)((offsety + 70)*scaleFactor), paint);
 		}
 		
+		if (curmode != 0) {
+			//Draw Arrows
+			vorrupMatrix.reset();
+			vorrupMatrix.postTranslate(-vorrup.getWidth()/2, -vorrup.getHeight()/2);
+			vorrupMatrix.postScale((float)(0.4*scaleFactor), (float)(0.6*scaleFactor));
+			vorrupMatrix.postTranslate(0, -(335*scaleFactor));
+			vorrupMatrix.postRotate(vorrdirection);
+			vorrupMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
 		
-		//Draw Arrows
-		vorrupMatrix.reset();
-		vorrupMatrix.postTranslate(-vorrup.getWidth()/2, -vorrup.getHeight()/2);
-		vorrupMatrix.postScale((float)(0.6*scaleFactor), (float)(0.6*scaleFactor));
-		vorrupMatrix.postTranslate(0, -(335*scaleFactor));
-		vorrupMatrix.postRotate(vorrdirection);
-		vorrupMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+			canvas.drawBitmap(vorrup, vorrupMatrix, paint);
 		
-		canvas.drawBitmap(vorrup, vorrupMatrix, paint);
-		
-		//Draw Arrows
-		vorrbackMatrix.reset();
-		vorrbackMatrix.postTranslate(-vorrback.getWidth()/2, -vorrback.getHeight()/2);
-		vorrbackMatrix.postScale((float)(0.6*scaleFactor), (float)(0.6*scaleFactor));
-		vorrbackMatrix.postTranslate(0, + (335*scaleFactor));
-		vorrbackMatrix.postRotate(vorrdirection);
-		vorrbackMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+			//Draw Arrows
+			vorrbackMatrix.reset();
+			vorrbackMatrix.postTranslate(-vorrback.getWidth()/2, -vorrback.getHeight()/2);
+			vorrbackMatrix.postScale((float)(0.4*scaleFactor), (float)(0.6*scaleFactor));
+			vorrbackMatrix.postTranslate(0, + (335*scaleFactor));
+			vorrbackMatrix.postRotate(vorrdirection);
+			vorrbackMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
 				
-		canvas.drawBitmap(vorrback, vorrbackMatrix, paint);
-		
+			canvas.drawBitmap(vorrback, vorrbackMatrix, paint);
+		}
 	}
 	
 	void drawADFL(Canvas canvas, Paint paint) {
@@ -462,7 +572,7 @@ public class Plane777 extends Plane {
 			//Draw Arrows
 			adfrupMatrix.reset();
 			adfrupMatrix.postTranslate(-adfrup.getWidth()/2, -adfrup.getHeight()/2);
-			adfrupMatrix.postScale((float)(0.7*scaleFactor), (float)(0.7*scaleFactor));
+			adfrupMatrix.postScale((float)(0.4*scaleFactor), (float)(0.6*scaleFactor));
 			adfrupMatrix.postTranslate(0, -(335*scaleFactor));
 			adfrupMatrix.postRotate(adfrdirection);
 			adfrupMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
@@ -472,7 +582,7 @@ public class Plane777 extends Plane {
 			//Draw Arrows
 			adfrbackMatrix.reset();
 			adfrbackMatrix.postTranslate(-adfrback.getWidth()/2, -adfrback.getHeight()/2);
-			adfrbackMatrix.postScale((float)(0.7*scaleFactor), (float)(0.7*scaleFactor));
+			adfrbackMatrix.postScale((float)(0.4*scaleFactor), (float)(0.6*scaleFactor));
 			adfrbackMatrix.postTranslate(0, + (335*scaleFactor));
 			adfrbackMatrix.postRotate(adfrdirection);
 			adfrbackMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
@@ -488,7 +598,6 @@ public class Plane777 extends Plane {
 		
 		float rotation = realheading - (float)(radial);
 				
-		
 		// Draw radial arrows
 		radialupMatrix.reset();
 		radialupMatrix.postTranslate(-radialup.getWidth()/2, -radialup.getHeight()/2);

@@ -81,33 +81,33 @@
 
 <!-- NAV2 starts here -->
    <chunk>
-    <name>NAV1 ID</name>
+    <name>NAV2 ID</name>
     <type>string</type>
     <format>%s</format>
     <node>/instrumentation/nav[1]/nav-id</node>
    </chunk>
 
    <chunk>
-    <name>NAV1 DME</name>
+    <name>NAV2 DME</name>
     <type>float</type>
     <format>%f</format>
     <node>/instrumentation/nav[1]/nav-distance</node>
    </chunk>
 
    <chunk>
-    <name>NAV1 DME in range</name>
+    <name>NAV2 DME in range</name>
     <type>bool</type>
     <node>/instrumentation/nav[1]/dme-in-range</node>
    </chunk>
 
    <chunk>
-    <name>NAV1 in range</name>
+    <name>NAV2 in range</name>
     <type>bool</type>
     <node>/instrumentation/nav[1]/in-range</node>
    </chunk>
 
    <chunk>
-    <name>NAV1 DME</name>
+    <name>NAV2 DME</name>
     <type>float</type>
     <format>%f</format>
     <node>/instrumentation/nav[1]/frequencies/selected-mhz</node>
@@ -199,7 +199,7 @@
     <name>Real heading</name>
     <type>float</type>
     <format>%f</format>
-    <node>/orientation/heading-deg</node>    
+    <node>/orientation/heading-deg</node>
    </chunk>
 
    <chunk>
@@ -217,6 +217,52 @@
    </chunk>
 
 <!-- VOR1 ends here -->
+
+   <chunk>
+    <name>Encoder Mode </name>
+    <format>%d</format>
+    <node>/instrumentation/efis/mfd/mode-num</node>
+   </chunk>
+
+   <chunk>
+    <name>range </name>
+    <format>%d</format>
+    <node>/instrumentation/efis/inputs/range-nm</node>
+   </chunk>
+
+   <chunk>
+    <name>Encoder mode pushutton</name>
+    <type>bool</type>
+    <node>/instrumentation/efis/inputs/nd-centered</node>
+   </chunk>
+
+   <chunk>
+    <name>true air speed TAS </name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/velocities/airspeed-kt</node>
+   </chunk>
+
+   <chunk>
+    <name>ground speed GS </name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/velocities/groundspeed-kt</node>
+   </chunk>
+
+   <chunk>
+    <name>wind direction</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/environment/wind-from-heading-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>wind speed</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/environment/wind-speed-kt</node>
+   </chunk>
 
 
   </output>

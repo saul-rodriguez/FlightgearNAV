@@ -50,6 +50,17 @@ public class Plane {
 	float radialdef;
 	float gsdef;
 	
+	//Encoder Modes
+	int mode;
+	int range;
+	boolean modebut;
+	
+	float truespeed;
+	float groundspeed;
+	
+	float windspeed;
+	float windheading;
+	
 	/*
 	float horizontRollAngle;
 	float horizontPitchAngle;	

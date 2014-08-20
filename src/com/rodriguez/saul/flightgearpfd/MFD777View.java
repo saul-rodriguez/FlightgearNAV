@@ -309,6 +309,41 @@ public class MFD777View extends SurfaceView implements SurfaceHolder.Callback {
 		plane.gsdef = def;
 	}
 	
+	void setMode(int newmode)
+	{
+		plane.mode = newmode;
+	}
+	
+	void setRange(int newrange)
+	{
+		plane.range = newrange;
+	}
+	
+	void setModebut(boolean newmodebut)
+	{
+		plane.modebut = newmodebut;
+	}
+	
+	void setTruespeed(float newspeed)
+	{
+		plane.truespeed = newspeed;
+	}
+	
+	void setGroundpeed(float newspeed)
+	{
+		plane.groundspeed = newspeed;
+	}
+	
+	void setWindspeed(float newspeed)
+	{
+		plane.windspeed = newspeed;
+	}
+	
+	void setWindhead(float newhead)
+	{
+		plane.windheading = newhead;
+	}
+	
 	/*
 	void SetSpeed(float newSpeed) 
 	{
