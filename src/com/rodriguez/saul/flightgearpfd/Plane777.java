@@ -39,7 +39,11 @@ public class Plane777 extends Plane {
 	Bitmap defnid;
 	Bitmap bug;
 	Bitmap wind;
-		
+	
+	Bitmap circenter;
+	Bitmap cirup;
+	Bitmap cirback;
+			
 	Matrix maskMatrix;
 	Matrix maskfullMatrix;
 	Matrix hsiMatrix;
@@ -61,6 +65,9 @@ public class Plane777 extends Plane {
 	Matrix defnidMatrix;
 	Matrix bugMatrix;
 	Matrix windMatrix;
+	Matrix circenterMatrix;
+	Matrix cirupMatrix;
+	Matrix cirbackMatrix;
 	
 	Context mContext;
 	
@@ -91,6 +98,9 @@ public class Plane777 extends Plane {
 		defnidMatrix = new Matrix();
 		bugMatrix = new Matrix();
 		windMatrix = new Matrix();
+		circenterMatrix = new Matrix();
+		cirupMatrix = new Matrix();
+		cirbackMatrix = new Matrix();
 		//Load bitmaps
 		
 		mask = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.navmask);
@@ -125,6 +135,11 @@ public class Plane777 extends Plane {
 		bug = Bitmap.createBitmap(symbols, 352, 27, 37, 58);
 		
 		wind = Bitmap.createBitmap(symbols, 70, 115, 35, 114);
+		
+		circenter = Bitmap.createBitmap(symbols, 337, 200, 64, 84);
+		cirup = Bitmap.createBitmap(symbols, 402, 102, 48, 203);
+		cirback = Bitmap.createBitmap(symbols, 418, 311, 17, 192);
+		
 		
 		//Initialize all the parameters
 		scaleFactor = (float)1.0;
@@ -194,7 +209,22 @@ public class Plane777 extends Plane {
         paint.setFilterBitmap(true);
         
         if (modebut == true) { //Circle
-        	
+        	switch(mode) {
+    			case 0:
+    					drawCir(canvas,paint, 0); //APP
+    					break;
+    			case 1:
+    					drawCir(canvas,paint, 1); //VOR
+    					break;
+    			case 2:
+    					drawCir(canvas,paint, 2); //MAP
+    					break;
+    			case 3:
+    					drawPln(canvas,paint);
+    					break;
+    			default:
+    					break;
+        	}
         } else { //Arc
         	switch(mode) {
         		case 0:
@@ -216,6 +246,146 @@ public class Plane777 extends Plane {
         
 		//drawHsiArc(canvas, paint);
 	
+	}
+	
+	public void drawCir(Canvas canvas, Paint paint, int curmode)
+	{
+		int offsety = 25; // y offset of the center of the arc 
+		
+		//Prepare the mask
+		maskfullMatrix.reset();
+		maskfullMatrix.postTranslate(-maskfull.getWidth()/2, -maskfull.getHeight()/2 );
+		maskfullMatrix.postScale(scaleFactor, scaleFactor);
+		maskfullMatrix.postTranslate(centerx, centery);
+		
+		//prepare hsi
+		hsiMatrix.reset();
+		hsiMatrix.postTranslate(-hsi.getWidth()/2, -hsi.getHeight()/2 );
+		hsiMatrix.postRotate(-heading);
+		hsiMatrix.postScale((float)(scaleFactor*.85),(float)(scaleFactor*.85));
+		hsiMatrix.postTranslate(centerx, centery + (float)(offsety*scaleFactor));
+		        
+		//draw hsiarc
+		canvas.drawBitmap(hsi,hsiMatrix,paint);
+		
+		//Draw Concentric Circles
+		//drawCircles(canvas,paint);
+				
+		//draw mask
+		canvas.drawBitmap(maskfull,maskfullMatrix,paint);
+				
+		//Heading text
+		paint.setColor(Color.WHITE);
+		paint.setStyle(Paint.Style.FILL_AND_STROKE);	
+		paint.setTextSize(24*scaleFactor);
+		paint.setStrokeWidth((int)(1*scaleFactor));
+		paint.setTextAlign(Align.CENTER);
+				
+		if (heading < 10) {
+			canvas.drawText(String.format("00%d", (int)heading), centerx, centery - (int)(180*scaleFactor), paint);
+		} else if (heading < 100) {
+			canvas.drawText(String.format("0%d", (int)heading), centerx, centery - (int)(180*scaleFactor), paint);
+		} else {
+			canvas.drawText(String.format("%d", (int)heading), centerx, centery - (int)(180*scaleFactor), paint);
+		}
+		
+		//paint.setTextSize(18*scaleFactor);
+		//canvas.drawText(String.format("%d",(range/2)), centerx - (float)(10*scaleFactor), centery - (float)(20*scaleFactor), paint);
+		
+		//paint.setColor(Color.BLACK);
+		//canvas.drawRect((centerx - 254*scaleFactor), (centery + offsety*scaleFactor), (centerx + 254*scaleFactor), 2*centery, paint);
+		
+		
+		paint.setColor(Color.GREEN);
+		paint.setTextSize(18*scaleFactor);
+		paint.setStrokeWidth((int)(0.8*scaleFactor));
+		//canvas.drawText("TRK", centerx - (int)(50*scaleFactor), centery - (int)(180*scaleFactor), paint);
+		canvas.drawText("MAG", centerx + (int)(55*scaleFactor), centery - (int)(180*scaleFactor), paint);
+		
+		
+		//Draw Radial and GS if required
+		if (curmode == 0) {
+			canvas.drawText("HDG", centerx - (int)(50*scaleFactor), centery - (int)(180*scaleFactor), paint);
+			drawRadialcirc(canvas,paint);
+			drawGScirc(canvas,paint);	
+			
+		}
+		
+		if (curmode == 1) {
+			canvas.drawText("HDG", centerx - (int)(50*scaleFactor), centery - (int)(180*scaleFactor), paint);
+			drawRadialcirc(canvas,paint);
+			drawAPheadingCir(canvas, paint);
+		}
+		
+		if (curmode == 2) {
+			canvas.drawText("TRK", centerx - (int)(50*scaleFactor), centery - (int)(180*scaleFactor), paint);
+			drawAPheadingCir(canvas, paint);
+		}
+		//Draw VORL
+		
+		if (switchvorl == 1) {
+						
+			
+			drawVORL(canvas, paint, curmode);
+			
+		} else if (switchvorl == -1) {
+			drawADFL(canvas, paint);
+		}
+		
+		if (switchvorr == 1) {
+			drawVORR(canvas, paint, curmode);
+		} else if (switchvorr == -1) {
+			drawADFR(canvas, paint);
+		}
+			
+		//prepare and draw center of circle (Triangle)
+		
+	    circenterMatrix.reset();
+		circenterMatrix.postTranslate(-circenter.getWidth()/2, -circenter.getHeight()/2 );
+		circenterMatrix.postScale((float)(0.75*scaleFactor),(float)(0.75*scaleFactor));
+		circenterMatrix.postTranslate(centerx, centery + (float)(offsety*scaleFactor));
+		
+		canvas.drawBitmap(circenter, circenterMatrix, paint);
+		
+		
+		//Draw vertical line
+		/*
+		paint.setColor(Color.WHITE);
+		paint.setStyle(Style.STROKE);
+		paint.setStrokeWidth((2*scaleFactor));
+		
+		canvas.drawLine(centerx, centery + (float)((offsety - 95*0.9)*scaleFactor) , centerx, centery - (float)(185*scaleFactor), paint);
+		canvas.drawLine(centerx - (float)(10*scaleFactor),
+				centery + (float)((offsety - 95*0.9)*scaleFactor),
+				centerx + (float)(10*scaleFactor), centery + (float)((offsety - 95*0.9)*scaleFactor), paint);
+		canvas.drawLine(centerx - (float)(10*scaleFactor),
+				centery + (float)((offsety - 190*0.9)*scaleFactor),
+				centerx + (float)(10*scaleFactor), centery + (float)((offsety - 190*0.9)*scaleFactor), paint);
+		canvas.drawLine(centerx - (float)(10*scaleFactor),
+				centery + (float)((offsety - 285*0.9)*scaleFactor),
+				centerx + (float)(10*scaleFactor), centery + (float)((offsety - 285*0.9)*scaleFactor), paint);
+	
+		*/
+		//Draw true speed text 
+		paint.setColor(Color.WHITE);
+		paint.setStyle(Style.FILL_AND_STROKE);
+		paint.setTextSize(18*scaleFactor);
+		paint.setStrokeWidth((int)(0.8*scaleFactor));
+			
+		if (truespeed > 100) { 
+			canvas.drawText(String.format("TAS %d", (int)truespeed), centerx - (int)(130*scaleFactor), centery - (int)(230*scaleFactor), paint);
+		}
+		
+		canvas.drawText(String.format("GS %d", (int)groundspeed), centerx - (int)(200*scaleFactor), centery - (int)(230*scaleFactor), paint);
+		
+		//Draw wind speed and heading
+		drawWind(canvas, paint);
+		
+		//Hide borders
+		paint.setColor(Color.rgb(0xb6, 0xb2, 0xa7));
+		paint.setStyle(Paint.Style.FILL_AND_STROKE);		
+		canvas.drawRect((centerx - 380*scaleFactor), 0, (centerx - 256*scaleFactor), 2*centery, paint);
+		canvas.drawRect((centerx + 256*scaleFactor), 0, (centerx + 380*scaleFactor), 2*centery, paint);
 	}
 	
 	public void drawArc(Canvas canvas, Paint paint, int curmode)
@@ -267,25 +437,31 @@ public class Plane777 extends Plane {
 		
 		
 		paint.setColor(Color.GREEN);
-		//paint.setTextSize(18*scaleFactor);
+		paint.setTextSize(18*scaleFactor);
 		paint.setStrokeWidth((int)(0.8*scaleFactor));
-		canvas.drawText("TRK", centerx - (int)(50*scaleFactor), centery - (int)(210*scaleFactor), paint);
+		//canvas.drawText("TRK", centerx - (int)(50*scaleFactor), centery - (int)(210*scaleFactor), paint);
 		canvas.drawText("MAG", centerx + (int)(55*scaleFactor), centery - (int)(210*scaleFactor), paint);
 		
-		//Draw AP heading
-		if (curmode != 0) {
-			drawAPheading(canvas, paint);
-		}
+		//Draw Radial and GS if required
 		
-		
+
 		//Draw Radial and GS if required
 		if (curmode == 0) {
+			canvas.drawText("HDG", centerx - (int)(50*scaleFactor), centery - (int)(210*scaleFactor), paint);
 			drawRadialARC(canvas,paint);
 			drawGSArc(canvas,paint);	
+			
 		}
 		
 		if (curmode == 1) {
+			canvas.drawText("HDG", centerx - (int)(50*scaleFactor), centery - (int)(210*scaleFactor), paint);
 			drawRadialARC(canvas,paint);
+			drawAPheading(canvas, paint);
+		}
+		
+		if (curmode == 2) {
+			canvas.drawText("TRK", centerx - (int)(50*scaleFactor), centery - (int)(210*scaleFactor), paint);
+			drawAPheading(canvas, paint);
 		}
 		
 		//Draw VORL
@@ -412,6 +588,35 @@ public class Plane777 extends Plane {
 		//Calculate x,y coordinates for the line
 		float x = -(float)(scaleFactor*350*Math.cos((90-rotation)/180*Math.PI))+centerx;
 		float y = -(float)(scaleFactor*350*Math.sin((90-rotation)/180*Math.PI))+centery + (float)(offsety*scaleFactor);
+		
+		paint.setColor(Color.MAGENTA);
+		paint.setStrokeWidth((2*scaleFactor));
+		paint.setPathEffect(new DashPathEffect(new float[] {(12*scaleFactor),(15*scaleFactor)}, 0));
+		canvas.drawLine(centerx, centery + (float)(offsety*scaleFactor), x, y , paint);
+		
+		paint.setPathEffect(null);		
+		paint.setStyle(Paint.Style.FILL_AND_STROKE);
+	}
+	
+	void drawAPheadingCir(Canvas canvas, Paint paint)
+	{
+		int offsety = 25; // y offset of the center of the arc
+		//AP Heading indicator
+		float rotation = heading - (float)(apheading);
+						
+		apheadMatrix.reset();
+		apheadMatrix.postTranslate(-aphead.getWidth()/2, -aphead.getHeight()/2);
+		apheadMatrix.postScale(scaleFactor, scaleFactor);
+		apheadMatrix.postTranslate(0, -(190*scaleFactor));
+		apheadMatrix.postRotate(-rotation);
+				
+		apheadMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+								
+		canvas.drawBitmap(aphead, apheadMatrix, paint);
+		
+		//Calculate x,y coordinates for the line
+		float x = -(float)(scaleFactor*180*Math.cos((90-rotation)/180*Math.PI))+centerx;
+		float y = -(float)(scaleFactor*180*Math.sin((90-rotation)/180*Math.PI))+centery + (float)(offsety*scaleFactor);
 		
 		paint.setColor(Color.MAGENTA);
 		paint.setStrokeWidth((2*scaleFactor));
@@ -624,6 +829,8 @@ public class Plane777 extends Plane {
 		defnidMatrix.postTranslate(-defnid.getWidth()/2, -defnid.getHeight()/2);
 		defnidMatrix.postScale((float)(0.4*scaleFactor), (float)(0.75*scaleFactor));
 		defnidMatrix.postTranslate((float)(radialdef*65*scaleFactor), 0);
+		//float defa =  10;
+		//defnidMatrix.postTranslate(defa, 0);
 		defnidMatrix.postRotate(-rotation);
 						
 		defnidMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
@@ -632,8 +839,11 @@ public class Plane777 extends Plane {
 		paint.setTextSize(18*scaleFactor);
 		paint.setStrokeWidth((int)(0.8*scaleFactor));
 		
-		if ((vorldmeinrange == true) && (vorlinrange == true)) {
-			canvas.drawBitmap(defnid, defnidMatrix, paint);
+		if (vorlinrange == true) {
+			canvas.drawBitmap(defnid, defnidMatrix, paint);			
+		}
+		
+		if ((vorldmeinrange == true) && (vorlinrange == true)) {			
 			float dme = (float)(vorldme/1852.);	
 			canvas.drawText(String.format("DME %3.1f", dme), centerx + (float)(200*scaleFactor), centery - (int)((190)*scaleFactor), paint);
 		}
@@ -658,9 +868,81 @@ public class Plane777 extends Plane {
 		} else {
 			canvas.drawText(String.format("CRS %d", (int)radial), centerx + (int)(200*scaleFactor), centery - (int)(210*scaleFactor), paint);
 		}
-		
-				
+					
 	}
+	
+	void drawRadialcirc(Canvas canvas, Paint paint)
+	{
+		int offsety = 25; // y offset of the center of the arc
+		
+		float rotation = realheading - (float)(radial);
+				
+		// Draw radial arrows
+		cirupMatrix.reset();
+		cirupMatrix.postTranslate(-cirup.getWidth()/2, -cirup.getHeight()/2);
+		cirupMatrix.postScale((float)(0.6*scaleFactor), (float)(0.5*scaleFactor));
+		cirupMatrix.postTranslate(0, -(110*scaleFactor));
+		cirupMatrix.postRotate(-rotation);
+				
+		cirupMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+								
+		canvas.drawBitmap(cirup, cirupMatrix, paint);
+		
+		cirbackMatrix.reset();
+		cirbackMatrix.postTranslate(-cirback.getWidth()/2, -cirback.getHeight()/2);
+		cirbackMatrix.postScale((float)(0.6*scaleFactor), (float)(0.5*scaleFactor));
+		cirbackMatrix.postTranslate(0, +(110*scaleFactor));
+		cirbackMatrix.postRotate(-rotation);
+				
+		cirbackMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+								
+		canvas.drawBitmap(cirback, cirbackMatrix, paint);
+		
+		//Draw deflection
+		defnidMatrix.reset();
+		defnidMatrix.postTranslate(-defnid.getWidth()/2, -defnid.getHeight()/2);
+		defnidMatrix.postScale((float)(0.4*scaleFactor), (float)(0.9*scaleFactor));
+		defnidMatrix.postTranslate((float)(radialdef*81.25*scaleFactor), 0);
+		defnidMatrix.postRotate(-rotation);
+						
+		defnidMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+					
+		paint.setColor(Color.WHITE);
+		paint.setTextSize(18*scaleFactor);
+		paint.setStrokeWidth((int)(0.8*scaleFactor));
+		
+		if (vorlinrange == true) {
+			canvas.drawBitmap(defnid, defnidMatrix, paint);			
+		}
+		
+		if ((vorldmeinrange == true) && (vorlinrange == true)) {			
+			float dme = (float)(vorldme/1852.);	
+			canvas.drawText(String.format("DME %3.1f", dme), centerx + (float)(200*scaleFactor), centery - (int)((190)*scaleFactor), paint);
+		}
+						
+		//Draw horizontal deflection circles
+		defhorMatrix.reset();
+		defhorMatrix.postTranslate(-defhor.getWidth()/2, -defhor.getHeight()/2);
+		defhorMatrix.postScale((float)(1*scaleFactor), (float)(1*scaleFactor));
+		//defhorMatrix.postTranslate(0, -(195*scaleFactor));
+		defhorMatrix.postRotate(-rotation);
+				
+		defhorMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+		
+		canvas.drawBitmap(defhor, defhorMatrix, paint);
+				
+		//Draw CRS text
+				
+		if (radial < 10) {
+			canvas.drawText(String.format("CRS 00%d", (int)radial), centerx + (int)(200*scaleFactor), centery - (int)(210*scaleFactor), paint);
+		} else if (radial < 100) {
+			canvas.drawText(String.format("CRS 0%d", (int)radial), centerx + (int)(200*scaleFactor), centery - (int)(210*scaleFactor), paint);
+		} else {
+			canvas.drawText(String.format("CRS %d", (int)radial), centerx + (int)(200*scaleFactor), centery - (int)(210*scaleFactor), paint);
+		}
+					
+	}
+	
 	
 	void drawGSArc(Canvas canvas, Paint paint)
 	{
@@ -681,6 +963,41 @@ public class Plane777 extends Plane {
 		bugMatrix.postScale((float)(0.3*scaleFactor), (float)(0.3*scaleFactor));
 		bugMatrix.postRotate(90);
 		bugMatrix.postTranslate(centerx + (int)(230*scaleFactor),centery + (float)((offsety-65 + 65*gsdef)*scaleFactor));
+		
+		canvas.drawBitmap(bug, bugMatrix, paint);
+		
+		//Draw ILS text 
+		paint.setColor(Color.WHITE);
+		paint.setTextSize(18*scaleFactor);
+		paint.setStrokeWidth((int)(0.8*scaleFactor));
+		
+		if (vorlid.equals("")) {
+			canvas.drawText(String.format("ILS %4.2f",vorlfreq), centerx + (int)(200*scaleFactor), centery - (int)(230*scaleFactor), paint);
+		} else {
+			canvas.drawText("ILS "+ vorlid, centerx + (int)(200*scaleFactor), centery - (int)(230*scaleFactor), paint);
+		}
+		
+	}
+	
+	void drawGScirc(Canvas canvas, Paint paint)
+	{
+		int offsety = 25; // y offset of the center of the arc
+		
+		float vercenter = offsety - defver.getHeight()/2;
+		defverMatrix.reset();
+		defverMatrix.postTranslate(-defver.getWidth()/2, -defver.getHeight()/2);
+		defverMatrix.postScale((float)(0.8*scaleFactor), (float)(0.8*scaleFactor));
+		//defhorMatrix.postTranslate(0, -(195*scaleFactor));
+		//defhorMatrix.postRotate(-rotation);				
+		defverMatrix.postTranslate(centerx + (int)(230*scaleFactor),centery + (float)((offsety)*scaleFactor));
+		
+		canvas.drawBitmap(defver, defverMatrix, paint);
+		
+		bugMatrix.reset();
+		bugMatrix.postTranslate(-bug.getWidth()/2, -bug.getHeight()/2);
+		bugMatrix.postScale((float)(0.3*scaleFactor), (float)(0.3*scaleFactor));
+		bugMatrix.postRotate(90);
+		bugMatrix.postTranslate(centerx + (int)(230*scaleFactor),centery + (float)((offsety + 65*gsdef)*scaleFactor));
 		
 		canvas.drawBitmap(bug, bugMatrix, paint);
 		
