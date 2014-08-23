@@ -247,6 +247,9 @@ public class PanelView extends Activity {
 				mMFD777.setWindhead(values[0].getFloat(MessageHandlerFGFS.WINDHEADING));
 				mMFD777.setWindspeed(values[0].getFloat(MessageHandlerFGFS.WINDSPEED));
 				
+				//Position
+				mMFD777.setLat(values[0].getFloat(MessageHandlerFGFS.LATITUDE));
+				mMFD777.setLon(values[0].getFloat(MessageHandlerFGFS.LONGITUDE));
 				
 				/*
 				mMFD777.SetSpeed(values[0].getFloat(MessageHandlerFGFS.SPEED));

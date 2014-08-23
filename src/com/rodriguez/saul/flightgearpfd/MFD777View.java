@@ -344,6 +344,16 @@ public class MFD777View extends SurfaceView implements SurfaceHolder.Callback {
 		plane.windheading = newhead;
 	}
 	
+	void setLat(float newLat)
+	{
+		plane.lat = newLat;
+	}
+	
+	void setLon(float newLon)
+	{
+		plane.lon = newLon;
+	}
+	
 	/*
 	void SetSpeed(float newSpeed) 
 	{

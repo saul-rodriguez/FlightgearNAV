@@ -1,6 +1,7 @@
 package com.rodriguez.saul.flightgearpfd;
 
 
+//import com.example.com.readnav.test.NAVdb;
 import com.rodriguez.saul.flightgearpfd.R;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -70,6 +71,12 @@ public class Plane777 extends Plane {
 	Matrix cirbackMatrix;
 	
 	Context mContext;
+	
+	//NAV database
+	NAVdb navdb;
+	float reflat;
+	float reflon;
+	
 	
 	public Plane777(Context context) {
 		
@@ -199,11 +206,31 @@ public class Plane777 extends Plane {
 
 		windspeed = 0;
 		windheading = 0;
+
+		//Position
+		lat = 0;
+		lon = 0;
+		
+		reflat = 0;
+		reflon = 0;
+		
+		// Read Database
+		navdb = new NAVdb(mContext);
+		navdb.readDB(); // Read nav.csv file from assets folder
 		
 	}
 	
 	public void draw(Canvas canvas) {
 	
+		//Calculate objects nearby
+		if (navdb.calcDistance(lat, lon, reflat, reflon) > 50000)
+		{
+			reflat = lat;
+			reflon = lon;
+			navdb.selectNear(lat, lon);
+		}		
+		
+		
 		Paint paint = new Paint();
         paint.setAntiAlias(true);
         paint.setFilterBitmap(true);
@@ -270,6 +297,9 @@ public class Plane777 extends Plane {
 		
 		//Draw Concentric Circles
 		//drawCircles(canvas,paint);
+		
+		//Draw NAV objects
+		drawNAVobjects(canvas,paint,offsety);
 				
 		//draw mask
 		canvas.drawBitmap(maskfull,maskfullMatrix,paint);
@@ -418,6 +448,9 @@ public class Plane777 extends Plane {
 		//draw hsiarc
 		canvas.drawBitmap(hsiarc,hsiarcMatrix,paint);
 		
+		//Draw NAV objects
+		drawNAVobjects(canvas,paint,offsety);
+		
 		//Draw Concentric Circles
 		drawCircles(canvas,paint);
 				
@@ -439,6 +472,7 @@ public class Plane777 extends Plane {
 			canvas.drawText(String.format("%d", (int)heading), centerx, centery - (int)(210*scaleFactor), paint);
 		}
 		
+		// Draw range in the middle circle
 		paint.setTextSize(18*scaleFactor);
 		canvas.drawText(String.format("%d",(range/2)), centerx - (float)(10*scaleFactor), centery - (float)(20*scaleFactor), paint);
 		
@@ -1135,12 +1169,50 @@ public class Plane777 extends Plane {
 		int offsety = 160; // y offset of the center of the arc
 		//draw concentric circles
 		paint.setColor(Color.WHITE);
-		paint.setStyle(Style.STROKE);
+		paint.setStyle(Style.STROKE);		
 		paint.setStrokeWidth((2*scaleFactor));
 				
 		//Draw Circles
 		canvas.drawCircle(centerx, centery + (float)(offsety*scaleFactor), (float)(95*0.9*scaleFactor), paint);
 		canvas.drawCircle(centerx, centery + (float)(offsety*scaleFactor), (float)(190*0.9*scaleFactor), paint);
 		canvas.drawCircle(centerx, centery + (float)(offsety*scaleFactor), (float)(285*0.9*scaleFactor), paint);
+	}
+	
+	void drawNAVobjects(Canvas canvas, Paint paint, int offsety)
+	{				
+		paint.setColor(Color.CYAN);
+		paint.setStyle(Style.STROKE);
+		paint.setTextSize((float)(10*scaleFactor));
+		paint.setStrokeWidth(0);
+		
+		
+		float dist,distx, disty, angle;
+		for (int i = 0; i<navdb.mnear; i++ ){
+			dist = navdb.calcDistance(lat, lon, navdb.mlatitude[i], navdb.mlongitude[i]);
+			distx = (float)navdb.distx;
+			disty = (float)navdb.disty;
+			
+			distx = (distx/1852)*(324/range); //pixels
+			disty = (disty/1852)*(324/range); //pixels
+			dist = (dist/1852)*(324/range); //pixels
+			
+			angle = (float)Math.atan2(disty,distx);						
+			angle = angle + (float)(heading/180*Math.PI);
+			
+			distx = (float) (dist*Math.cos(angle));
+			disty = (float)(dist*Math.sin(angle));
+			
+			
+			canvas.drawCircle(centerx + (float)distx*scaleFactor, 
+					centery + (float)((offsety-disty)*scaleFactor),
+					(float)(8*scaleFactor), paint);
+			canvas.drawText(navdb.mname[i],
+					centerx + (float)(distx + 10)*scaleFactor,
+					centery + (float)((offsety-disty)*scaleFactor),
+					paint);
+			
+			
+			
+		}
 	}
 }

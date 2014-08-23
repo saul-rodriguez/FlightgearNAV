@@ -264,6 +264,20 @@
     <node>/environment/wind-speed-kt</node>
    </chunk>
 
+   <chunk>
+    <name>latitude</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/position/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>longitude</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/position/longitude-deg</node>
+   </chunk>
+
 
   </output>
 

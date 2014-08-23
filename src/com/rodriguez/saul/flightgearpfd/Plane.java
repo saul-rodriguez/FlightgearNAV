@@ -61,6 +61,9 @@ public class Plane {
 	float windspeed;
 	float windheading;
 	
+	float lat;
+	float lon;
+	
 	/*
 	float horizontRollAngle;
 	float horizontPitchAngle;	

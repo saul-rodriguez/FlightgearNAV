@@ -94,6 +94,9 @@ public class MessageHandlerFGFS {
 	public static final int WINDHEADING = 33;
 	public static final int WINDSPEED = 34;
 	
+	public static final int LATITUDE = 35;
+	public static final int LONGITUDE = 36;
+	
 	
 	/*
 	public static final int SPEED = 0; // speed, in knots
