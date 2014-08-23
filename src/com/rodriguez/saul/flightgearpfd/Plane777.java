@@ -329,43 +329,53 @@ public class Plane777 extends Plane {
 			drawVORL(canvas, paint, curmode);
 			
 		} else if (switchvorl == -1) {
-			drawADFL(canvas, paint);
+			drawADFL(canvas, paint,curmode);
 		}
 		
 		if (switchvorr == 1) {
 			drawVORR(canvas, paint, curmode);
 		} else if (switchvorr == -1) {
-			drawADFR(canvas, paint);
+			drawADFR(canvas, paint,curmode);
 		}
 			
 		//prepare and draw center of circle (Triangle)
+		if (curmode == 2) { // draw triangle
+			triangleMatrix.reset();
+			triangleMatrix.postTranslate(-triangle.getWidth()/2, -triangle.getHeight()/2 );
+			triangleMatrix.postScale((float)(0.5*scaleFactor),(float)(0.5*scaleFactor));
+			triangleMatrix.postTranslate(centerx, centery + (float)(offsety*scaleFactor));
+				
+			canvas.drawBitmap(triangle, triangleMatrix, paint);
+		} else { // draw center of VOR
+			circenterMatrix.reset();
+			circenterMatrix.postTranslate(-circenter.getWidth()/2, -circenter.getHeight()/2 );
+			circenterMatrix.postScale((float)(0.75*scaleFactor),(float)(0.75*scaleFactor));
+			circenterMatrix.postTranslate(centerx, centery + (float)(offsety*scaleFactor));
+			
+			canvas.drawBitmap(circenter, circenterMatrix, paint);
+		}
 		
-	    circenterMatrix.reset();
-		circenterMatrix.postTranslate(-circenter.getWidth()/2, -circenter.getHeight()/2 );
-		circenterMatrix.postScale((float)(0.75*scaleFactor),(float)(0.75*scaleFactor));
-		circenterMatrix.postTranslate(centerx, centery + (float)(offsety*scaleFactor));
-		
-		canvas.drawBitmap(circenter, circenterMatrix, paint);
+	    
 		
 		
 		//Draw vertical line
-		/*
+		
 		paint.setColor(Color.WHITE);
 		paint.setStyle(Style.STROKE);
 		paint.setStrokeWidth((2*scaleFactor));
 		
-		canvas.drawLine(centerx, centery + (float)((offsety - 95*0.9)*scaleFactor) , centerx, centery - (float)(185*scaleFactor), paint);
-		canvas.drawLine(centerx - (float)(10*scaleFactor),
-				centery + (float)((offsety - 95*0.9)*scaleFactor),
-				centerx + (float)(10*scaleFactor), centery + (float)((offsety - 95*0.9)*scaleFactor), paint);
-		canvas.drawLine(centerx - (float)(10*scaleFactor),
-				centery + (float)((offsety - 190*0.9)*scaleFactor),
-				centerx + (float)(10*scaleFactor), centery + (float)((offsety - 190*0.9)*scaleFactor), paint);
-		canvas.drawLine(centerx - (float)(10*scaleFactor),
-				centery + (float)((offsety - 285*0.9)*scaleFactor),
-				centerx + (float)(10*scaleFactor), centery + (float)((offsety - 285*0.9)*scaleFactor), paint);
-	
-		*/
+		canvas.drawLine(centerx, centery + (float)((offsety - 100)*scaleFactor) , centerx, centery + (float)((offsety - 170)*scaleFactor), paint);
+		canvas.drawLine(centerx, centery + (float)((offsety + 100)*scaleFactor) , centerx, centery + (float)((offsety + 170)*scaleFactor), paint);
+		
+		canvas.drawLine(centerx - (float)(15*scaleFactor),
+				centery + (float)((offsety - 120)*scaleFactor),
+				centerx + (float)(15*scaleFactor), centery + (float)((offsety - 120)*scaleFactor), paint);
+		
+		canvas.drawLine(centerx - (float)(15*scaleFactor),
+				centery + (float)((offsety + 120)*scaleFactor),
+				centerx + (float)(15*scaleFactor), centery + (float)((offsety + 120)*scaleFactor), paint);
+		
+		
 		//Draw true speed text 
 		paint.setColor(Color.WHITE);
 		paint.setStyle(Style.FILL_AND_STROKE);
@@ -472,13 +482,13 @@ public class Plane777 extends Plane {
 			drawVORL(canvas, paint, curmode);
 			
 		} else if (switchvorl == -1) {
-			drawADFL(canvas, paint);
+			drawADFL(canvas, paint,curmode);
 		}
 		
 		if (switchvorr == 1) {
 			drawVORR(canvas, paint, curmode);
 		} else if (switchvorr == -1) {
-			drawADFR(canvas, paint);
+			drawADFR(canvas, paint, curmode);
 		}
 			
 		//prepare and draw Triangle
@@ -650,26 +660,53 @@ public class Plane777 extends Plane {
 			canvas.drawText("DME - - -", centerx - (float)(200*scaleFactor), centery + (float)((offsety + 70)*scaleFactor), paint);
 		}
 		
-		if (curmode != 0) { 
-			//Draw Arrows
-			vorlupMatrix.reset();
-			vorlupMatrix.postTranslate(-vorlup.getWidth()/2, -vorlup.getHeight()/2);
-			vorlupMatrix.postScale((float)(0.7*scaleFactor), (float)(0.7*scaleFactor));
-			vorlupMatrix.postTranslate(0, -(335*scaleFactor));
-			vorlupMatrix.postRotate(vorldirection);
-			vorlupMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+		if (modebut == false) { //arc
+			if (curmode != 0) { 
+				//Draw Arrows
+				vorlupMatrix.reset();
+				vorlupMatrix.postTranslate(-vorlup.getWidth()/2, -vorlup.getHeight()/2);
+				vorlupMatrix.postScale((float)(0.7*scaleFactor), (float)(0.7*scaleFactor));
+				vorlupMatrix.postTranslate(0, -(335*scaleFactor));
+				vorlupMatrix.postRotate(vorldirection);
+				vorlupMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
 		
-			canvas.drawBitmap(vorlup, vorlupMatrix, paint);
+				canvas.drawBitmap(vorlup, vorlupMatrix, paint);
 		
-			//Draw Arrows
-			vorlbackMatrix.reset();
-			vorlbackMatrix.postTranslate(-vorlback.getWidth()/2, -vorlback.getHeight()/2);
-			vorlbackMatrix.postScale((float)(0.7*scaleFactor), (float)(0.7*scaleFactor));
-			vorlbackMatrix.postTranslate(0, + (335*scaleFactor));
-			vorlbackMatrix.postRotate(vorldirection);
-			vorlbackMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+				//Draw Arrows
+				vorlbackMatrix.reset();
+				vorlbackMatrix.postTranslate(-vorlback.getWidth()/2, -vorlback.getHeight()/2);
+				vorlbackMatrix.postScale((float)(0.7*scaleFactor), (float)(0.7*scaleFactor));
+				vorlbackMatrix.postTranslate(0, + (335*scaleFactor));
+				vorlbackMatrix.postRotate(vorldirection);
+				vorlbackMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
 				
-			canvas.drawBitmap(vorlback, vorlbackMatrix, paint);
+				canvas.drawBitmap(vorlback, vorlbackMatrix, paint);
+			}
+		} else { //circle
+			offsety = 25;
+			if (curmode != 0) { 
+				
+				//Draw Arrows
+				vorlupMatrix.reset();
+				vorlupMatrix.postTranslate(-vorlup.getWidth()/2, -vorlup.getHeight()/2);
+				vorlupMatrix.postScale((float)(0.6*scaleFactor), (float)(0.6*scaleFactor));
+				vorlupMatrix.postTranslate(0, -(150*scaleFactor));
+				vorlupMatrix.postRotate(vorldirection);
+				vorlupMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+		
+				canvas.drawBitmap(vorlup, vorlupMatrix, paint);
+		
+				//Draw Arrows
+				vorlbackMatrix.reset();
+				vorlbackMatrix.postTranslate(-vorlback.getWidth()/2, -vorlback.getHeight()/2);
+				vorlbackMatrix.postScale((float)(0.6*scaleFactor), (float)(0.6*scaleFactor));
+				vorlbackMatrix.postTranslate(0, + (150*scaleFactor));
+				vorlbackMatrix.postRotate(vorldirection);
+				vorlbackMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+				
+				canvas.drawBitmap(vorlback, vorlbackMatrix, paint);
+			}
+			
 		}
 	}
 	
@@ -697,30 +734,56 @@ public class Plane777 extends Plane {
 			canvas.drawText("DME - - -", centerx + (float)(200*scaleFactor), centery + (float)((offsety + 70)*scaleFactor), paint);
 		}
 		
-		if (curmode != 0) {
-			//Draw Arrows
-			vorrupMatrix.reset();
-			vorrupMatrix.postTranslate(-vorrup.getWidth()/2, -vorrup.getHeight()/2);
-			vorrupMatrix.postScale((float)(0.4*scaleFactor), (float)(0.6*scaleFactor));
-			vorrupMatrix.postTranslate(0, -(335*scaleFactor));
-			vorrupMatrix.postRotate(vorrdirection);
-			vorrupMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+		if (modebut == false) { //arc
+					
+			if (curmode != 0) {
+				//Draw Arrows
+				vorrupMatrix.reset();
+				vorrupMatrix.postTranslate(-vorrup.getWidth()/2, -vorrup.getHeight()/2);
+				vorrupMatrix.postScale((float)(0.4*scaleFactor), (float)(0.6*scaleFactor));
+				vorrupMatrix.postTranslate(0, -(335*scaleFactor));
+				vorrupMatrix.postRotate(vorrdirection);
+				vorrupMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
 		
-			canvas.drawBitmap(vorrup, vorrupMatrix, paint);
+				canvas.drawBitmap(vorrup, vorrupMatrix, paint);
 		
-			//Draw Arrows
-			vorrbackMatrix.reset();
-			vorrbackMatrix.postTranslate(-vorrback.getWidth()/2, -vorrback.getHeight()/2);
-			vorrbackMatrix.postScale((float)(0.4*scaleFactor), (float)(0.6*scaleFactor));
-			vorrbackMatrix.postTranslate(0, + (335*scaleFactor));
-			vorrbackMatrix.postRotate(vorrdirection);
-			vorrbackMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+				//Draw Arrows
+				vorrbackMatrix.reset();
+				vorrbackMatrix.postTranslate(-vorrback.getWidth()/2, -vorrback.getHeight()/2);
+				vorrbackMatrix.postScale((float)(0.4*scaleFactor), (float)(0.6*scaleFactor));
+				vorrbackMatrix.postTranslate(0, + (335*scaleFactor));
+				vorrbackMatrix.postRotate(vorrdirection);
+				vorrbackMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
 				
-			canvas.drawBitmap(vorrback, vorrbackMatrix, paint);
+				canvas.drawBitmap(vorrback, vorrbackMatrix, paint);
+			}
+		} else { //circ
+			offsety = 25;
+			if (curmode != 0) {
+				//Draw Arrows
+				vorrupMatrix.reset();
+				vorrupMatrix.postTranslate(-vorrup.getWidth()/2, -vorrup.getHeight()/2);
+				vorrupMatrix.postScale((float)(0.4*scaleFactor), (float)(0.5*scaleFactor));
+				vorrupMatrix.postTranslate(0, -(150*scaleFactor));
+				vorrupMatrix.postRotate(vorrdirection);
+				vorrupMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+		
+				canvas.drawBitmap(vorrup, vorrupMatrix, paint);
+		
+				//Draw Arrows
+				vorrbackMatrix.reset();
+				vorrbackMatrix.postTranslate(-vorrback.getWidth()/2, -vorrback.getHeight()/2);
+				vorrbackMatrix.postScale((float)(0.4*scaleFactor), (float)(0.5*scaleFactor));
+				vorrbackMatrix.postTranslate(0, + (150*scaleFactor));
+				vorrbackMatrix.postRotate(vorrdirection);
+				vorrbackMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+				
+				canvas.drawBitmap(vorrback, vorrbackMatrix, paint);
+			}
 		}
 	}
 	
-	void drawADFL(Canvas canvas, Paint paint) {
+	void drawADFL(Canvas canvas, Paint paint, int curmode) {
 		int offsety = 160; // y offset of the center of the arc
 
 		paint.setColor(Color.CYAN);
@@ -735,30 +798,58 @@ public class Plane777 extends Plane {
 			canvas.drawText(String.format("%d",adflfreq), centerx - (float)(200*scaleFactor), centery + (float)((offsety + 50)*scaleFactor), paint);
 		}
 		
+		if (curmode == 0) return;
+		
 		if (adflinrange == true) {
-			//Draw Arrows
-			adflupMatrix.reset();
-			adflupMatrix.postTranslate(-adflup.getWidth()/2, -adflup.getHeight()/2);
-			adflupMatrix.postScale((float)(0.7*scaleFactor), (float)(0.7*scaleFactor));
-			adflupMatrix.postTranslate(0, -(335*scaleFactor));
-			adflupMatrix.postRotate(adfldirection);
-			adflupMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+			
+			if (modebut == false) { //arc
+			
+				//Draw Arrows
+				adflupMatrix.reset();
+				adflupMatrix.postTranslate(-adflup.getWidth()/2, -adflup.getHeight()/2);
+				adflupMatrix.postScale((float)(0.7*scaleFactor), (float)(0.7*scaleFactor));
+				adflupMatrix.postTranslate(0, -(335*scaleFactor));
+				adflupMatrix.postRotate(adfldirection);
+				adflupMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
 				
-			canvas.drawBitmap(adflup, adflupMatrix, paint);
+				canvas.drawBitmap(adflup, adflupMatrix, paint);
 				
-			//Draw Arrows
-			adflbackMatrix.reset();
-			adflbackMatrix.postTranslate(-adflback.getWidth()/2, -adflback.getHeight()/2);
-			adflbackMatrix.postScale((float)(0.7*scaleFactor), (float)(0.7*scaleFactor));
-			adflbackMatrix.postTranslate(0, + (335*scaleFactor));
-			adflbackMatrix.postRotate(adfldirection);
-			adflbackMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+				//Draw Arrows
+				adflbackMatrix.reset();
+				adflbackMatrix.postTranslate(-adflback.getWidth()/2, -adflback.getHeight()/2);
+				adflbackMatrix.postScale((float)(0.7*scaleFactor), (float)(0.7*scaleFactor));
+				adflbackMatrix.postTranslate(0, + (335*scaleFactor));
+				adflbackMatrix.postRotate(adfldirection);
+				adflbackMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
 						
-			canvas.drawBitmap(adflback, adflbackMatrix, paint);
+				canvas.drawBitmap(adflback, adflbackMatrix, paint);
+			
+			} else {
+				offsety = 25;
+				//Draw Arrows
+				adflupMatrix.reset();
+				adflupMatrix.postTranslate(-adflup.getWidth()/2, -adflup.getHeight()/2);
+				adflupMatrix.postScale((float)(0.6*scaleFactor), (float)(0.6*scaleFactor));
+				adflupMatrix.postTranslate(0, -(150*scaleFactor));
+				adflupMatrix.postRotate(adfldirection);
+				adflupMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+				
+				canvas.drawBitmap(adflup, adflupMatrix, paint);
+				
+				//Draw Arrows
+				adflbackMatrix.reset();
+				adflbackMatrix.postTranslate(-adflback.getWidth()/2, -adflback.getHeight()/2);
+				adflbackMatrix.postScale((float)(0.6*scaleFactor), (float)(0.6*scaleFactor));
+				adflbackMatrix.postTranslate(0, + (150*scaleFactor));
+				adflbackMatrix.postRotate(adfldirection);
+				adflbackMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+						
+				canvas.drawBitmap(adflback, adflbackMatrix, paint);
+			}
 		}
 	} 
 	
-	void drawADFR(Canvas canvas, Paint paint) {
+	void drawADFR(Canvas canvas, Paint paint, int curmode) {
 		int offsety = 160; // y offset of the center of the arc
 
 		paint.setColor(Color.CYAN);
@@ -773,26 +864,51 @@ public class Plane777 extends Plane {
 			canvas.drawText(String.format("%d",adfrfreq), centerx + (float)(200*scaleFactor), centery + (float)((offsety + 50)*scaleFactor), paint);
 		}
 		
-		if (adfrinrange == true) {
-			//Draw Arrows
-			adfrupMatrix.reset();
-			adfrupMatrix.postTranslate(-adfrup.getWidth()/2, -adfrup.getHeight()/2);
-			adfrupMatrix.postScale((float)(0.4*scaleFactor), (float)(0.6*scaleFactor));
-			adfrupMatrix.postTranslate(0, -(335*scaleFactor));
-			adfrupMatrix.postRotate(adfrdirection);
-			adfrupMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+		if (curmode == 0) return;
+		
+		if (adfrinrange == true) { 
+			if (modebut == false) { //arc
+				//Draw Arrows
+				adfrupMatrix.reset();
+				adfrupMatrix.postTranslate(-adfrup.getWidth()/2, -adfrup.getHeight()/2);
+				adfrupMatrix.postScale((float)(0.4*scaleFactor), (float)(0.6*scaleFactor));
+				adfrupMatrix.postTranslate(0, -(335*scaleFactor));
+				adfrupMatrix.postRotate(adfrdirection);
+				adfrupMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
 						
-			canvas.drawBitmap(adfrup, adfrupMatrix, paint);
+				canvas.drawBitmap(adfrup, adfrupMatrix, paint);
 						
-			//Draw Arrows
-			adfrbackMatrix.reset();
-			adfrbackMatrix.postTranslate(-adfrback.getWidth()/2, -adfrback.getHeight()/2);
-			adfrbackMatrix.postScale((float)(0.4*scaleFactor), (float)(0.6*scaleFactor));
-			adfrbackMatrix.postTranslate(0, + (335*scaleFactor));
-			adfrbackMatrix.postRotate(adfrdirection);
-			adfrbackMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+				//Draw Arrows
+				adfrbackMatrix.reset();
+				adfrbackMatrix.postTranslate(-adfrback.getWidth()/2, -adfrback.getHeight()/2);
+				adfrbackMatrix.postScale((float)(0.4*scaleFactor), (float)(0.6*scaleFactor));
+				adfrbackMatrix.postTranslate(0, + (335*scaleFactor));
+				adfrbackMatrix.postRotate(adfrdirection);
+				adfrbackMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
 								
-			canvas.drawBitmap(adfrback, adfrbackMatrix, paint);
+				canvas.drawBitmap(adfrback, adfrbackMatrix, paint);
+			} else { //circ
+				offsety = 25;
+				//Draw Arrows
+				adfrupMatrix.reset();
+				adfrupMatrix.postTranslate(-adfrup.getWidth()/2, -adfrup.getHeight()/2);
+				adfrupMatrix.postScale((float)(0.4*scaleFactor), (float)(0.5*scaleFactor));
+				adfrupMatrix.postTranslate(0, -(150*scaleFactor));
+				adfrupMatrix.postRotate(adfrdirection);
+				adfrupMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+						
+				canvas.drawBitmap(adfrup, adfrupMatrix, paint);
+						
+				//Draw Arrows
+				adfrbackMatrix.reset();
+				adfrbackMatrix.postTranslate(-adfrback.getWidth()/2, -adfrback.getHeight()/2);
+				adfrbackMatrix.postScale((float)(0.4*scaleFactor), (float)(0.5*scaleFactor));
+				adfrbackMatrix.postTranslate(0, + (150*scaleFactor));
+				adfrbackMatrix.postRotate(adfrdirection);
+				adfrbackMatrix.postTranslate(centerx,centery + (float)(offsety*scaleFactor));
+								
+				canvas.drawBitmap(adfrback, adfrbackMatrix, paint);
+			}
 		}
 				
 	}
