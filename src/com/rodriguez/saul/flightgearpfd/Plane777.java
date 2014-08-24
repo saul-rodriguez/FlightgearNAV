@@ -44,6 +44,12 @@ public class Plane777 extends Plane {
 	Bitmap circenter;
 	Bitmap cirup;
 	Bitmap cirback;
+	
+	Bitmap ndsymbols;
+	Bitmap ndvor;
+	Bitmap ndvortac;
+	Bitmap ndfix;
+	
 			
 	Matrix maskMatrix;
 	Matrix maskfullMatrix;
@@ -70,6 +76,10 @@ public class Plane777 extends Plane {
 	Matrix cirupMatrix;
 	Matrix cirbackMatrix;
 	
+	Matrix ndvorMatrix;
+	Matrix ndfixMatrix;
+	
+	
 	Context mContext;
 	
 	//NAV database
@@ -77,6 +87,8 @@ public class Plane777 extends Plane {
 	float reflat;
 	float reflon;
 	
+	FIXdb fixdb;
+	int sync;
 	
 	public Plane777(Context context) {
 		
@@ -108,6 +120,8 @@ public class Plane777 extends Plane {
 		circenterMatrix = new Matrix();
 		cirupMatrix = new Matrix();
 		cirbackMatrix = new Matrix();
+		ndvorMatrix = new Matrix();
+		ndfixMatrix = new Matrix();
 		//Load bitmaps
 		
 		mask = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.navmask);
@@ -147,6 +161,10 @@ public class Plane777 extends Plane {
 		cirup = Bitmap.createBitmap(symbols, 402, 102, 48, 203);
 		cirback = Bitmap.createBitmap(symbols, 418, 311, 17, 192);
 		
+		ndsymbols = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.nd_symbols);
+		
+		ndvor = Bitmap.createBitmap(ndsymbols, 118, 0, 38, 34);
+		ndvortac = Bitmap.createBitmap(ndsymbols, 79, 0, 38, 34);
 		
 		//Initialize all the parameters
 		scaleFactor = (float)1.0;
@@ -214,22 +232,39 @@ public class Plane777 extends Plane {
 		reflat = 0;
 		reflon = 0;
 		
-		// Read Database
-		navdb = new NAVdb(mContext);
-		navdb.readDB(); // Read nav.csv file from assets folder
+		
 		
 	}
 	
-	public void draw(Canvas canvas) {
+	public void readDB() {
+		// Read Database
+		//sync = 1;
+		navdb = new NAVdb(mContext);
+		navdb.readDB(); // Read nav.csv file from assets folder
+				
+		fixdb = new FIXdb(mContext);
+		fixdb.readDB();
+		//sync = 0;
+		
+	}
 	
+	public boolean checkUpdateDBNeeded()
+	{
+		return (navdb.calcDistance(lat, lon, reflat, reflon) > 50000);
+	}
+	
+	public void updateDB()
+	{
 		//Calculate objects nearby
-		if (navdb.calcDistance(lat, lon, reflat, reflon) > 50000)
-		{
 			reflat = lat;
 			reflon = lon;
+			
 			navdb.selectNear(lat, lon);
-		}		
-		
+			fixdb.selectNear(lat, lon);
+	
+	}
+	
+	public void draw(Canvas canvas) {
 		
 		Paint paint = new Paint();
         paint.setAntiAlias(true);
@@ -1179,7 +1214,9 @@ public class Plane777 extends Plane {
 	}
 	
 	void drawNAVobjects(Canvas canvas, Paint paint, int offsety)
-	{				
+	{			
+			
+		
 		paint.setColor(Color.CYAN);
 		paint.setStyle(Style.STROKE);
 		paint.setTextSize((float)(10*scaleFactor));
@@ -1209,10 +1246,35 @@ public class Plane777 extends Plane {
 			canvas.drawText(navdb.mname[i],
 					centerx + (float)(distx + 10)*scaleFactor,
 					centery + (float)((offsety-disty)*scaleFactor),
-					paint);
-			
-			
-			
+					paint);			
 		}
+		
+		paint.setColor(Color.RED);
+		for (int i = 0; i<fixdb.mnear; i++ ){
+			dist = fixdb.calcDistance(lat, lon, fixdb.mlatitude[i], fixdb.mlongitude[i]);
+			distx = (float)fixdb.distx;
+			disty = (float)fixdb.disty;
+			
+			distx = (distx/1852)*(324/range); //pixels
+			disty = (disty/1852)*(324/range); //pixels
+			dist = (dist/1852)*(324/range); //pixels
+			
+			angle = (float)Math.atan2(disty,distx);						
+			angle = angle + (float)(heading/180*Math.PI);
+			
+			distx = (float) (dist*Math.cos(angle));
+			disty = (float)(dist*Math.sin(angle));
+			
+			
+			canvas.drawCircle(centerx + (float)distx*scaleFactor, 
+					centery + (float)((offsety-disty)*scaleFactor),
+					(float)(5*scaleFactor), paint);
+			canvas.drawText(fixdb.mname[i],
+					centerx + (float)(distx + 10)*scaleFactor,
+					centery + (float)((offsety-disty)*scaleFactor),
+					paint);			
+		}
+		
+		
 	}
 }

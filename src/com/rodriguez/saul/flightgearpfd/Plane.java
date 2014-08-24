@@ -101,4 +101,16 @@ public class Plane {
 	public void draw(Canvas canvas) {
 		
 	}
+	
+	public void readDB() {
+		
+	}
+	
+	public boolean checkUpdateDBNeeded() {
+		return false;
+	}
+	
+	public void updateDB() {
+		
+	}
 }

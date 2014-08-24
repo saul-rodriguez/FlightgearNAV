@@ -109,6 +109,9 @@ public class PanelView extends Activity {
 			// TODO Auto-generated method stub
 			super.onResume();
 			
+			//Read DB
+			mMFD777.plane.readDB();
+			
 			Log.d(MLOG,"Starting threads");
 			
 			if (udpReceiver == null) {
@@ -251,6 +254,12 @@ public class PanelView extends Activity {
 				mMFD777.setLat(values[0].getFloat(MessageHandlerFGFS.LATITUDE));
 				mMFD777.setLon(values[0].getFloat(MessageHandlerFGFS.LONGITUDE));
 				
+				if (mMFD777.plane.checkUpdateDBNeeded()) {
+					mMFD777.plane.updateDB();
+				} else {
+					mMFD777.draw();
+				}
+				
 				/*
 				mMFD777.SetSpeed(values[0].getFloat(MessageHandlerFGFS.SPEED));
 				mMFD777.setAltitude(values[0].getFloat(MessageHandlerFGFS.ALTITUDE));
@@ -281,7 +290,7 @@ public class PanelView extends Activity {
 				mMFD777.setDMEinrange(values[0].getBool(MessageHandlerFGFS.DMEINRANGE));
 				mMFD777.setDME(values[0].getFloat(MessageHandlerFGFS.DME));
 				*/
-				mMFD777.draw();
+				
 				
 				
 			}		
