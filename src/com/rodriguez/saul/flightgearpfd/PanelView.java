@@ -114,6 +114,9 @@ public class PanelView extends Activity {
 			
 			Log.d(MLOG,"Starting threads");
 			
+			mMFD777.plane.reflat = 0;
+			mMFD777.plane.reflon = 0;
+			
 			if (udpReceiver == null) {
 			     udpReceiver = (UDPReceiver) new UDPReceiver().execute(udpPort);
 			}

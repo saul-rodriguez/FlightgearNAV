@@ -13,7 +13,7 @@ Context mContext;
 	//NAV database related
 	static final int SIZE = 119000;
 	//static final int SIZE = 1000;
-	static final int SIZE_NEAR = 50;
+	static final int SIZE_NEAR = 100;
 	
 	//int[] ID;
 	float[] longitude;
@@ -31,6 +31,10 @@ Context mContext;
 	double distx;
 	double disty;
 		
+	//Coefficients for quick calculatins
+	double m_per_deg_lat_quick;
+	double m_per_deg_lon_quick;
+	
 	
 	public FIXdb(Context context)
 	{
@@ -109,9 +113,10 @@ Context mContext;
 		
 		for (int i = 0; i < SIZE; i++){
 			
-			dist = calcDistance(lat,lon,latitude[i],longitude[i]);
+			//dist = calcDistance(lat,lon,latitude[i],longitude[i]);
+			dist = calcDistanceQuick(lat,lon,latitude[i],longitude[i]);
 			
-			if (dist < 200000) { //Save objects which are 200 km close
+			if (dist < 100000) { //Save objects which are 100 km close
 				//mID[mnear] = ID[i];
 				mlatitude[mnear] = latitude[i];
 				mlongitude[mnear] = longitude[i];
@@ -147,6 +152,37 @@ Context mContext;
 
 		disty = deltaLat * m_per_deg_lat;
 		distx = deltaLon * m_per_deg_lon;
+		
+		//dist_m = Math.sqrt (  Math.pow( deltaLat * m_per_deg_lat,2) + Math.pow( deltaLon * m_per_deg_lon , 2) );
+		dist_m = Math.sqrt (  Math.pow( disty,2) + Math.pow( distx , 2) );
+		return (float) dist_m;
+	}
+	
+	void calcQuickcoeff(double latMid)
+	{
+		m_per_deg_lat_quick = 111132.954 - 559.822 * Math.cos( 2.0 * latMid ) + 1.175 * Math.cos( 4.0 * latMid);
+		m_per_deg_lon_quick = (3.14159265359/180 ) * 6367449 * Math.cos ( latMid );
+	}
+	
+	float calcDistanceQuick(float Lat1, float Lon1, float Lat2, float Lon2)
+	{
+		//double latMid, m_per_deg_lat, m_per_deg_lon, deltaLat, deltaLon,dist_m;
+		double deltaLat, deltaLon,dist_m;
+		
+		//latMid = (Lat1+Lat2 )/2.0*(Math.PI/180);  // radians!  just use Lat1 for slightly less accurate estimate
+
+
+		//m_per_deg_lat = 111132.954 - 559.822 * Math.cos( 2.0 * latMid ) + 1.175 * Math.cos( 4.0 * latMid);
+		//m_per_deg_lon = (3.14159265359/180 ) * 6367449 * Math.cos ( latMid );
+
+		//deltaLat = Math.abs(Lat1 - Lat2);
+		//deltaLon = Math.abs(Lon1 - Lon2);
+		
+		deltaLat = (Lat2 - Lat1);
+		deltaLon = (Lon2 - Lon1);
+
+		disty = deltaLat * m_per_deg_lat_quick;
+		distx = deltaLon * m_per_deg_lon_quick;
 		
 		//dist_m = Math.sqrt (  Math.pow( deltaLat * m_per_deg_lat,2) + Math.pow( deltaLon * m_per_deg_lon , 2) );
 		dist_m = Math.sqrt (  Math.pow( disty,2) + Math.pow( distx , 2) );

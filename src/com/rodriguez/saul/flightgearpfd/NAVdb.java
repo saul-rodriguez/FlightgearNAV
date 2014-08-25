@@ -31,6 +31,10 @@ public class NAVdb {
 	double distx;
 	double disty;
 	
+	//Coefficients for quick calculatins
+	double m_per_deg_lat_quick;
+	double m_per_deg_lon_quick;
+	
 	public NAVdb(Context context)
 	{
 		mContext = context;
@@ -151,8 +155,38 @@ public class NAVdb {
 		dist_m = Math.sqrt (  Math.pow( disty,2) + Math.pow( distx , 2) );
 		return (float) dist_m;
 	}
+	
+	void calcQuickcoeff(double latMid)
+	{
+		m_per_deg_lat_quick = 111132.954 - 559.822 * Math.cos( 2.0 * latMid ) + 1.175 * Math.cos( 4.0 * latMid);
+		m_per_deg_lon_quick = (3.14159265359/180 ) * 6367449 * Math.cos ( latMid );
+	}
+	
+	float calcDistanceQuick(float Lat1, float Lon1, float Lat2, float Lon2)
+	{
+		//double latMid, m_per_deg_lat, m_per_deg_lon, deltaLat, deltaLon,dist_m;
+		double deltaLat, deltaLon,dist_m;
+		
+		//latMid = (Lat1+Lat2 )/2.0*(Math.PI/180);  // radians!  just use Lat1 for slightly less accurate estimate
 
-	//void calcDistmeters(float Lat1, float Lon1, float Lon2, float Lat2)
+
+		//m_per_deg_lat = 111132.954 - 559.822 * Math.cos( 2.0 * latMid ) + 1.175 * Math.cos( 4.0 * latMid);
+		//m_per_deg_lon = (3.14159265359/180 ) * 6367449 * Math.cos ( latMid );
+
+		//deltaLat = Math.abs(Lat1 - Lat2);
+		//deltaLon = Math.abs(Lon1 - Lon2);
+		
+		deltaLat = (Lat2 - Lat1);
+		deltaLon = (Lon2 - Lon1);
+
+		disty = deltaLat * m_per_deg_lat_quick;
+		distx = deltaLon * m_per_deg_lon_quick;
+		
+		//dist_m = Math.sqrt (  Math.pow( deltaLat * m_per_deg_lat,2) + Math.pow( deltaLon * m_per_deg_lon , 2) );
+		dist_m = Math.sqrt (  Math.pow( disty,2) + Math.pow( distx , 2) );
+		return (float) dist_m;
+	}
+	
 }
 
 

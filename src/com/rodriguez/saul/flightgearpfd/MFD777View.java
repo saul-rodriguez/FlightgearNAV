@@ -32,6 +32,7 @@ import android.graphics.Paint.Align;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -100,6 +101,10 @@ public class MFD777View extends SurfaceView implements SurfaceHolder.Callback {
 		scaleFactor = (float)(mheight)/(float)maskHeight;
 				
 		plane.scaleFactor = scaleFactor;
+		
+		//plane.
+		plane.reflat = 0;
+		plane.reflon = 0;
 		//Draw the view
 		draw();
 		
@@ -111,6 +116,33 @@ public class MFD777View extends SurfaceView implements SurfaceHolder.Callback {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	  public boolean onTouchEvent(MotionEvent event) {
+	    float eventX = event.getX();
+	    float eventY = event.getY();
+
+	    switch (event.getAction()) {
+	    	case MotionEvent.ACTION_DOWN:
+	    		if (plane.shownav == true) {
+	    			plane.shownav = false;
+	    		} else {
+	    			plane.shownav = true;	    			
+	    		}
+	    			
+	    		break;
+	    	case MotionEvent.ACTION_MOVE:
+	    		break;
+	    	case MotionEvent.ACTION_UP:
+	            break;
+	    	default:
+	    		return false;
+	    }
+	    	    
+	    return true;
+	  }
+	
+	
 	
 	public void draw() {
 		

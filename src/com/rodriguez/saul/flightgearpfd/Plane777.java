@@ -83,12 +83,10 @@ public class Plane777 extends Plane {
 	Context mContext;
 	
 	//NAV database
-	NAVdb navdb;
-	float reflat;
-	float reflon;
-	
+	NAVdb navdb;	
 	FIXdb fixdb;
 	int sync;
+	
 	
 	public Plane777(Context context) {
 		
@@ -163,8 +161,11 @@ public class Plane777 extends Plane {
 		
 		ndsymbols = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.nd_symbols);
 		
-		ndvor = Bitmap.createBitmap(ndsymbols, 118, 0, 38, 34);
-		ndvortac = Bitmap.createBitmap(ndsymbols, 79, 0, 38, 34);
+		//ndvortac = Bitmap.createBitmap(ndsymbols, 118, 0, 38, 34);
+		ndvortac = Bitmap.createBitmap(ndsymbols, 39, 0, 38, 34);
+		//ndvor = Bitmap.createBitmap(ndsymbols, 79, 0, 38, 34);
+		ndvor = Bitmap.createBitmap(ndsymbols, 79, 0, 38, 34);
+		ndfix = Bitmap.createBitmap(ndsymbols, 160, 0, 30, 26);
 		
 		//Initialize all the parameters
 		scaleFactor = (float)1.0;
@@ -232,6 +233,8 @@ public class Plane777 extends Plane {
 		reflat = 0;
 		reflon = 0;
 		
+		shownav = true;
+		
 		
 		
 	}
@@ -259,9 +262,13 @@ public class Plane777 extends Plane {
 			reflat = lat;
 			reflon = lon;
 			
+			navdb.calcQuickcoeff(lat);
 			navdb.selectNear(lat, lon);
+			
+			
+			
+			fixdb.calcQuickcoeff(lat);			
 			fixdb.selectNear(lat, lon);
-	
 	}
 	
 	public void draw(Canvas canvas) {
@@ -334,7 +341,8 @@ public class Plane777 extends Plane {
 		//drawCircles(canvas,paint);
 		
 		//Draw NAV objects
-		drawNAVobjects(canvas,paint,offsety);
+		if (shownav)
+			drawNAVobjects(canvas,paint,offsety);
 				
 		//draw mask
 		canvas.drawBitmap(maskfull,maskfullMatrix,paint);
@@ -484,7 +492,8 @@ public class Plane777 extends Plane {
 		canvas.drawBitmap(hsiarc,hsiarcMatrix,paint);
 		
 		//Draw NAV objects
-		drawNAVobjects(canvas,paint,offsety);
+		if (shownav)
+			drawNAVobjects(canvas,paint,offsety);
 		
 		//Draw Concentric Circles
 		drawCircles(canvas,paint);
@@ -1217,7 +1226,7 @@ public class Plane777 extends Plane {
 	{			
 			
 		
-		paint.setColor(Color.CYAN);
+		//paint.setColor(Color.CYAN);
 		paint.setStyle(Style.STROKE);
 		paint.setTextSize((float)(10*scaleFactor));
 		paint.setStrokeWidth(0);
@@ -1239,17 +1248,42 @@ public class Plane777 extends Plane {
 			distx = (float) (dist*Math.cos(angle));
 			disty = (float)(dist*Math.sin(angle));
 			
+			//ADF
+			if (navdb.mID[i] == 2) {
+				paint.setColor(Color.CYAN);
+				ndvorMatrix.reset();
+				ndvorMatrix.postTranslate(-ndvor.getWidth()/2, -ndvor.getHeight()/2);
+				ndvorMatrix.postScale((float)(0.5*scaleFactor), (float)(0.5*scaleFactor));
+				ndvorMatrix.postTranslate(centerx + (float)distx*scaleFactor, centery + (float)((offsety-disty)*scaleFactor));
+				
+				canvas.drawBitmap(ndvor, ndvorMatrix, paint);
 			
-			canvas.drawCircle(centerx + (float)distx*scaleFactor, 
-					centery + (float)((offsety-disty)*scaleFactor),
-					(float)(8*scaleFactor), paint);
-			canvas.drawText(navdb.mname[i],
-					centerx + (float)(distx + 10)*scaleFactor,
-					centery + (float)((offsety-disty)*scaleFactor),
-					paint);			
+				canvas.drawText(navdb.mname[i],
+					centerx + (float)(distx + 7)*scaleFactor,
+					centery + (float)((offsety-disty+10)*scaleFactor),
+					paint);
+			}
+			
+			//Draw VOR			
+			if (navdb.mID[i] == 3) {
+				paint.setColor(Color.GREEN);
+				ndvorMatrix.reset();
+				ndvorMatrix.postTranslate(-ndvortac.getWidth()/2, -ndvortac.getHeight()/2);
+				ndvorMatrix.postScale((float)(0.5*scaleFactor), (float)(0.5*scaleFactor));
+				ndvorMatrix.postTranslate(centerx + (float)distx*scaleFactor, centery + (float)((offsety-disty)*scaleFactor));
+				
+				canvas.drawBitmap(ndvortac, ndvorMatrix, paint);
+			
+				canvas.drawText(navdb.mname[i],
+					centerx + (float)(distx + 7)*scaleFactor,
+					centery + (float)((offsety-disty+10)*scaleFactor),
+					paint);
+			}
 		}
 		
-		paint.setColor(Color.RED);
+		//Fix points
+		paint.setColor(Color.CYAN);
+		
 		for (int i = 0; i<fixdb.mnear; i++ ){
 			dist = fixdb.calcDistance(lat, lon, fixdb.mlatitude[i], fixdb.mlongitude[i]);
 			distx = (float)fixdb.distx;
@@ -1265,13 +1299,19 @@ public class Plane777 extends Plane {
 			distx = (float) (dist*Math.cos(angle));
 			disty = (float)(dist*Math.sin(angle));
 			
+			ndfixMatrix.reset();
+			ndfixMatrix.postTranslate(-ndfix.getWidth()/2, -ndfix.getHeight()/2);
+			ndfixMatrix.postScale((float)(0.5*scaleFactor), (float)(0.5*scaleFactor));
+			ndfixMatrix.postTranslate(centerx + (float)distx*scaleFactor, centery + (float)((offsety-disty)*scaleFactor));
 			
-			canvas.drawCircle(centerx + (float)distx*scaleFactor, 
-					centery + (float)((offsety-disty)*scaleFactor),
-					(float)(5*scaleFactor), paint);
+			canvas.drawBitmap(ndfix, ndfixMatrix, paint);
+			//canvas.drawCircle(centerx + (float)distx*scaleFactor, 
+			//		centery + (float)((offsety-disty)*scaleFactor),
+			//		(float)(5*scaleFactor), paint);
+			
 			canvas.drawText(fixdb.mname[i],
-					centerx + (float)(distx + 10)*scaleFactor,
-					centery + (float)((offsety-disty)*scaleFactor),
+					centerx + (float)(distx + 7)*scaleFactor,
+					centery + (float)((offsety-disty+10)*scaleFactor),
 					paint);			
 		}
 		

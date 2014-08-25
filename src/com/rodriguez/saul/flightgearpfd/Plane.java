@@ -64,6 +64,10 @@ public class Plane {
 	float lat;
 	float lon;
 	
+	float reflat;
+	float reflon;
+	boolean shownav;
+	
 	/*
 	float horizontRollAngle;
 	float horizontPitchAngle;	
