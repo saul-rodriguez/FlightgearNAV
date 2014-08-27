@@ -1357,8 +1357,8 @@ containing a value of this type.
         public static final int left=0x7f050006;
         public static final int listMode=0x7f050013;
         public static final int list_item=0x7f05003a;
+        public static final int ll=0x7f050059;
         public static final int middle=0x7f050024;
-        public static final int myFDMView=0x7f050059;
         public static final int never=0x7f05001b;
         public static final int none=0x7f050022;
         public static final int normal=0x7f050012;

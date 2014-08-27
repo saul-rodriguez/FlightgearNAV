@@ -30,10 +30,13 @@ import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.WebViewClient;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.rodriguez.saul.flightgearpfd.R;
 
@@ -47,7 +50,17 @@ public class PanelView extends Activity {
 	//Selected plane
 	private int selPlane;
 	
+	//Dynamic view related
+	LinearLayout llMain;
 	MFD777View mMFD777;
+	myWebView myWeb;
+	
+	public static final int NAV = 1;
+	public static final int MAP = 2;
+	int displayFlag;
+	
+	NAVdb[] navdb;	
+	FIXdb[] fixdb;
 	
 	//Debug constant
 	private static final String MLOG = "PANELVIEW";
@@ -66,14 +79,23 @@ public class PanelView extends Activity {
 		
 		setContentView(R.layout.activity_panel_view);
 		
+		llMain = (LinearLayout) findViewById(R.id.ll);
+				
 		// Get the configuration via intent
 		Intent intent = getIntent();				
 		udpPort = intent.getIntExtra(MainActivity.MESS_PORT, 5502);		
 		selPlane = intent.getIntExtra(MainActivity.SELECTED_PLANE, 0);
 		
-		//Attach the custom view to a MFD777 object
-		mMFD777 = (MFD777View)findViewById(R.id.myFDMView);
-		mMFD777.setPlane(selPlane);
+		navdb = new NAVdb[1];
+		navdb[0] = new NAVdb(this);
+		navdb[0].readDB();
+		
+		fixdb = new FIXdb[1];
+		fixdb[0] = new FIXdb(this);
+		fixdb[0].readDB();
+		
+		displayFlag = NAV;
+		loadView();
 				
 		Log.d(MLOG,"Port: " + String.format("%d", udpPort));
 	}
@@ -110,7 +132,7 @@ public class PanelView extends Activity {
 			super.onResume();
 			
 			//Read DB
-			mMFD777.plane.readDB();
+			//mMFD777.plane.readDB();
 			
 			Log.d(MLOG,"Starting threads");
 			
@@ -199,104 +221,126 @@ public class PanelView extends Activity {
 			protected void onProgressUpdate(MessageHandlerFGFS... values) {
 				// TODO Auto-generated method stub
 				super.onProgressUpdate(values);
+				
+				int mode = (values[0].getInt(MessageHandlerFGFS.MODE));
+				
+				if (displayFlag == MAP) {
+					if (mode < 3) { // Change to MAP
+						displayFlag = NAV;
+						loadView();
+						return;
+					}
 					
+					
+				} else if (displayFlag == NAV){
+					
+					if (mode == 3) { // Change to MAP
+						displayFlag = MAP;
+						loadView();
+						return;
+					}
 				
-				mMFD777.setHeading(values[0].getFloat(MessageHandlerFGFS.HEADING));
-				mMFD777.setAPheading(values[0].getInt(MessageHandlerFGFS.APHEADING));
+					mMFD777.setHeading(values[0].getFloat(MessageHandlerFGFS.HEADING));
+					mMFD777.setAPheading(values[0].getInt(MessageHandlerFGFS.APHEADING));
 				
-				//VORL
-				mMFD777.setNAV1ID(values[0].getString(MessageHandlerFGFS.VORLID));
-				mMFD777.setNAV1DME(values[0].getFloat(MessageHandlerFGFS.VORLDME));
-				mMFD777.setNAV1DMEinrange(values[0].getBool(MessageHandlerFGFS.VORLDMEINRANGE));
-				mMFD777.setNAV1inrange(values[0].getBool(MessageHandlerFGFS.VORLINRANGE));
-				mMFD777.setNAV1freq(values[0].getFloat(MessageHandlerFGFS.VORLFREQ));
+					//VORL
+					mMFD777.setNAV1ID(values[0].getString(MessageHandlerFGFS.VORLID));
+					mMFD777.setNAV1DME(values[0].getFloat(MessageHandlerFGFS.VORLDME));
+					mMFD777.setNAV1DMEinrange(values[0].getBool(MessageHandlerFGFS.VORLDMEINRANGE));
+					mMFD777.setNAV1inrange(values[0].getBool(MessageHandlerFGFS.VORLINRANGE));
+					mMFD777.setNAV1freq(values[0].getFloat(MessageHandlerFGFS.VORLFREQ));
 				
-				mMFD777.setSwitchleft(values[0].getInt(MessageHandlerFGFS.SWITCHLEFT));
-				mMFD777.setNAV1dir(values[0].getFloat(MessageHandlerFGFS.VORLDIR));
+					mMFD777.setSwitchleft(values[0].getInt(MessageHandlerFGFS.SWITCHLEFT));
+					mMFD777.setNAV1dir(values[0].getFloat(MessageHandlerFGFS.VORLDIR));
 				
-				//VORRL
-				mMFD777.setNAV2ID(values[0].getString(MessageHandlerFGFS.VORRID));
-				mMFD777.setNAV2DME(values[0].getFloat(MessageHandlerFGFS.VORRDME));
-				mMFD777.setNAV2DMEinrange(values[0].getBool(MessageHandlerFGFS.VORRDMEINRANGE));
-				mMFD777.setNAV2inrange(values[0].getBool(MessageHandlerFGFS.VORRINRANGE));
-				mMFD777.setNAV2freq(values[0].getFloat(MessageHandlerFGFS.VORRFREQ));
+					//VORRL
+					mMFD777.setNAV2ID(values[0].getString(MessageHandlerFGFS.VORRID));
+					mMFD777.setNAV2DME(values[0].getFloat(MessageHandlerFGFS.VORRDME));
+					mMFD777.setNAV2DMEinrange(values[0].getBool(MessageHandlerFGFS.VORRDMEINRANGE));
+					mMFD777.setNAV2inrange(values[0].getBool(MessageHandlerFGFS.VORRINRANGE));
+					mMFD777.setNAV2freq(values[0].getFloat(MessageHandlerFGFS.VORRFREQ));
 				
-				mMFD777.setSwitchright(values[0].getInt(MessageHandlerFGFS.SWITCHRIGHT));
-				mMFD777.setNAV2dir(values[0].getFloat(MessageHandlerFGFS.VORRDIR));
+					mMFD777.setSwitchright(values[0].getInt(MessageHandlerFGFS.SWITCHRIGHT));
+					mMFD777.setNAV2dir(values[0].getFloat(MessageHandlerFGFS.VORRDIR));
 				
-				//ADFL
-				mMFD777.setADF1ID(values[0].getString(MessageHandlerFGFS.ADFLID));
-				mMFD777.setADF1inrange(values[0].getBool(MessageHandlerFGFS.ADFLINRANGE));
-				mMFD777.setADF1freq(values[0].getInt(MessageHandlerFGFS.ADFLFREQ));
-				mMFD777.setADF1dir(values[0].getFloat(MessageHandlerFGFS.ADFLDIR));
+					//ADFL
+					mMFD777.setADF1ID(values[0].getString(MessageHandlerFGFS.ADFLID));
+					mMFD777.setADF1inrange(values[0].getBool(MessageHandlerFGFS.ADFLINRANGE));
+					mMFD777.setADF1freq(values[0].getInt(MessageHandlerFGFS.ADFLFREQ));
+					mMFD777.setADF1dir(values[0].getFloat(MessageHandlerFGFS.ADFLDIR));
 				
-				//ADFR
-				mMFD777.setADFrID(values[0].getString(MessageHandlerFGFS.ADFRID));
-				mMFD777.setADFrinrange(values[0].getBool(MessageHandlerFGFS.ADFRINRANGE));
-				mMFD777.setADFrfreq(values[0].getInt(MessageHandlerFGFS.ADFRFREQ));
-				mMFD777.setADFrdir(values[0].getFloat(MessageHandlerFGFS.ADFRDIR));
+					//ADFR
+					mMFD777.setADFrID(values[0].getString(MessageHandlerFGFS.ADFRID));
+					mMFD777.setADFrinrange(values[0].getBool(MessageHandlerFGFS.ADFRINRANGE));
+					mMFD777.setADFrfreq(values[0].getInt(MessageHandlerFGFS.ADFRFREQ));
+					mMFD777.setADFrdir(values[0].getFloat(MessageHandlerFGFS.ADFRDIR));
 				
-				//RADIAL NAV1
-				mMFD777.setRaddir(values[0].getFloat(MessageHandlerFGFS.RADIALDIR));
-				mMFD777.setRadhead(values[0].getFloat(MessageHandlerFGFS.RADIALHEAD));
-				mMFD777.setRaddef(values[0].getFloat(MessageHandlerFGFS.RADIALDEF));
-				mMFD777.setGSdef(values[0].getFloat(MessageHandlerFGFS.GSDEF));
+					//RADIAL NAV1
+					mMFD777.setRaddir(values[0].getFloat(MessageHandlerFGFS.RADIALDIR));
+					mMFD777.setRadhead(values[0].getFloat(MessageHandlerFGFS.RADIALHEAD));
+					mMFD777.setRaddef(values[0].getFloat(MessageHandlerFGFS.RADIALDEF));
+					mMFD777.setGSdef(values[0].getFloat(MessageHandlerFGFS.GSDEF));
 				
-				//Modes
-				mMFD777.setMode(values[0].getInt(MessageHandlerFGFS.MODE));
-				mMFD777.setRange(values[0].getInt(MessageHandlerFGFS.RANGE));
-				mMFD777.setModebut(values[0].getBool(MessageHandlerFGFS.MODEBUT));
+					//Modes
+					mMFD777.setMode(values[0].getInt(MessageHandlerFGFS.MODE));
+					mMFD777.setRange(values[0].getInt(MessageHandlerFGFS.RANGE));
+					mMFD777.setModebut(values[0].getBool(MessageHandlerFGFS.MODEBUT));
 				
-				//Speed
-				mMFD777.setTruespeed(values[0].getFloat(MessageHandlerFGFS.TRUESPEED));
-				mMFD777.setGroundpeed(values[0].getFloat(MessageHandlerFGFS.GROUNDSPEED));
-				mMFD777.setWindhead(values[0].getFloat(MessageHandlerFGFS.WINDHEADING));
-				mMFD777.setWindspeed(values[0].getFloat(MessageHandlerFGFS.WINDSPEED));
+					//Speed
+					mMFD777.setTruespeed(values[0].getFloat(MessageHandlerFGFS.TRUESPEED));
+					mMFD777.setGroundpeed(values[0].getFloat(MessageHandlerFGFS.GROUNDSPEED));
+					mMFD777.setWindhead(values[0].getFloat(MessageHandlerFGFS.WINDHEADING));
+					mMFD777.setWindspeed(values[0].getFloat(MessageHandlerFGFS.WINDSPEED));
 				
-				//Position
-				mMFD777.setLat(values[0].getFloat(MessageHandlerFGFS.LATITUDE));
-				mMFD777.setLon(values[0].getFloat(MessageHandlerFGFS.LONGITUDE));
+					//Position
+					mMFD777.setLat(values[0].getFloat(MessageHandlerFGFS.LATITUDE));
+					mMFD777.setLon(values[0].getFloat(MessageHandlerFGFS.LONGITUDE));
 				
-				if (mMFD777.plane.checkUpdateDBNeeded()) {
-					mMFD777.plane.updateDB();
-				} else {
-					mMFD777.draw();
+					//Check if the database needs update
+					if (mMFD777.plane.checkUpdateDBNeeded()) {
+						mMFD777.plane.updateDB();
+					} else {
+						mMFD777.draw();
+					}
+				
 				}
-				
-				/*
-				mMFD777.SetSpeed(values[0].getFloat(MessageHandlerFGFS.SPEED));
-				mMFD777.setAltitude(values[0].getFloat(MessageHandlerFGFS.ALTITUDE));
-				mMFD777.setVerticalSpeed(values[0].getFloat(MessageHandlerFGFS.VS));
-				mMFD777.setPitch(values[0].getFloat(MessageHandlerFGFS.PITCH));
-				mMFD777.setRoll(values[0].getFloat(MessageHandlerFGFS.ROLL));
-				mMFD777.setHeading(values[0].getFloat(MessageHandlerFGFS.HEADING));
-				mMFD777.setNAV1Quality(values[0].getFloat(MessageHandlerFGFS.NAV1QUALITY));
-				mMFD777.setNAV1loc(values[0].getBool(MessageHandlerFGFS.NAV1LOC));
-				mMFD777.setNAV1deflection((float)values[0].getFloat(MessageHandlerFGFS.NAV1DEF));
-				mMFD777.setGSActive(values[0].getBool(MessageHandlerFGFS.GSACTIVATED));
-				mMFD777.setGSInRange(values[0].getBool(MessageHandlerFGFS.GSINRANGE));
-				mMFD777.setGSdeflection((float)(values[0].getFloat(MessageHandlerFGFS.GSDEF)));
-				mMFD777.setRadioaltimeter(values[0].getInt(MessageHandlerFGFS.RADIOALTIMETER));
-				mMFD777.setMach(values[0].getFloat(MessageHandlerFGFS.MACHSPEED));
-				mMFD777.setStallSpeed(values[0].getFloat(MessageHandlerFGFS.STALLSPEED));
-				mMFD777.setStallWarning(values[0].getBool(MessageHandlerFGFS.STALLWARNING));
-				mMFD777.setFlaps(values[0].getFloat(MessageHandlerFGFS.FLAPS));
-				mMFD777.setMaxSpeed(values[0].getFloat(MessageHandlerFGFS.MAXSPEED));
-				mMFD777.setApIndicator(values[0].getString(MessageHandlerFGFS.AP));	
-				mMFD777.setPitchMode(values[0].getString(MessageHandlerFGFS.PITCHMODE));
-				mMFD777.setRollMode(values[0].getString(MessageHandlerFGFS.ROLLMODE));
-				mMFD777.setSpeedMode(values[0].getString(MessageHandlerFGFS.SPEEDMODE));
-				mMFD777.setAPaltitude(values[0].getFloat(MessageHandlerFGFS.APALTITUDE));
-				mMFD777.setAPactualaltitude(values[0].getFloat(MessageHandlerFGFS.APACTUALALT));				
-				mMFD777.setAPspeed(values[0].getFloat(MessageHandlerFGFS.APSPEED));
-				mMFD777.setAPheading(values[0].getInt(MessageHandlerFGFS.APHEADING));	
-				mMFD777.setDMEinrange(values[0].getBool(MessageHandlerFGFS.DMEINRANGE));
-				mMFD777.setDME(values[0].getFloat(MessageHandlerFGFS.DME));
-				*/
-				
 				
 				
 			}		
 	    	
 	    }
+
+		public void loadView() {
+			
+			
+			int btnGravity = Gravity.LEFT;
+			//int wrapContent = LinearLayout.LayoutParams.WRAP_CONTENT;
+			int wrapContent = LinearLayout.LayoutParams.FILL_PARENT;
+			
+			LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(
+			          wrapContent, wrapContent);
+			
+			lParams.gravity = btnGravity;
+			
+			//Remove any previously created view
+			llMain.removeAllViews();
+			
+			if (displayFlag == NAV)	{
+				//Attach the custom view to a MFD777 object
+				
+				mMFD777 = new MFD777View(this,null);
+				llMain.addView(mMFD777,lParams);
+				
+				mMFD777.setPlane(selPlane);
+				mMFD777.plane.setdb(navdb,fixdb);
+			} else if (displayFlag == MAP) {
+				myWeb = new myWebView(this);
+				llMain.addView(myWeb,lParams);
+				myWeb.setWebViewClient(new WebViewClient());
+				myWeb.getSettings().setJavaScriptEnabled(true);
+				myWeb.loadUrl("http://skyvector.com/?ll=-0.2393181630572534,-78.46655272806412&chart=301&zoom=1");
+
+			}
+			
+		}
 }

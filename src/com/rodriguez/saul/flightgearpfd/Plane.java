@@ -117,4 +117,9 @@ public class Plane {
 	public void updateDB() {
 		
 	}
+	
+	public void setdb(NAVdb[] nav, FIXdb[] fix)
+	{
+	
+	}
 }

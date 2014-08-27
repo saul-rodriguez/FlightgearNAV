@@ -234,9 +234,14 @@ public class Plane777 extends Plane {
 		reflon = 0;
 		
 		shownav = true;
+			
 		
-		
-		
+	}
+	
+	public void setdb(NAVdb[] nav, FIXdb[] fix)
+	{
+		navdb = nav[0];
+		fixdb = fix[0];
 	}
 	
 	public void readDB() {
