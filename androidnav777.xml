@@ -278,6 +278,149 @@
     <node>/position/longitude-deg</node>
    </chunk>
 
+<!-- Waypoints section starts here -->
+   <chunk>
+    <name>lat wp0</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/autopilot/route-manager/route/wp/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>lon wp0</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/autopilot/route-manager/route/wp/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>lat wp1</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/autopilot/route-manager/route/wp[1]/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>lon wp1</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/autopilot/route-manager/route/wp[1]/longitude-deg</node>
+   </chunk>
+
+  <chunk>
+    <name>lat wp2</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/autopilot/route-manager/route/wp[2]/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>lon wp2</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/autopilot/route-manager/route/wp[2]/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>lat wp3</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/autopilot/route-manager/route/wp[3]/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>lon wp3</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/autopilot/route-manager/route/wp[3]/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>lat wp4</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/autopilot/route-manager/route/wp[4]/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>lon wp4</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/autopilot/route-manager/route/wp[4]/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>lat wp5</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/autopilot/route-manager/route/wp[5]/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>lon wp5</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/autopilot/route-manager/route/wp[5]/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>lat wp6</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/autopilot/route-manager/route/wp[6]/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>lon wp6</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/autopilot/route-manager/route/wp[6]/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>lat wp7</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/autopilot/route-manager/route/wp[7]/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>lon wp7</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/autopilot/route-manager/route/wp[7]/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>lat wp8</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/autopilot/route-manager/route/wp[8]/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>lon wp8</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/autopilot/route-manager/route/wp[8]/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>lat wp9</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/autopilot/route-manager/route/wp[9]/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>lon wp9</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/autopilot/route-manager/route/wp[9]/longitude-deg</node>
+   </chunk>
+
+
+<!-- Waypoints section ends here -->
 
   </output>
 

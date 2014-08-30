@@ -318,7 +318,29 @@ public class PanelView extends Activity {
 					//Position
 					mMFD777.setLat(values[0].getFloat(MessageHandlerFGFS.LATITUDE));
 					mMFD777.setLon(values[0].getFloat(MessageHandlerFGFS.LONGITUDE));
-				
+					
+					//route
+					mMFD777.setLatwp0(values[0].getFloat(MessageHandlerFGFS.LATWP1));
+					mMFD777.setLonwp0(values[0].getFloat(MessageHandlerFGFS.LONWP1));
+					mMFD777.setLatwp1(values[0].getFloat(MessageHandlerFGFS.LATWP2));
+					mMFD777.setLonwp1(values[0].getFloat(MessageHandlerFGFS.LONWP2));
+					mMFD777.setLatwp2(values[0].getFloat(MessageHandlerFGFS.LATWP3));
+					mMFD777.setLonwp2(values[0].getFloat(MessageHandlerFGFS.LONWP3));
+					mMFD777.setLatwp3(values[0].getFloat(MessageHandlerFGFS.LATWP4));
+					mMFD777.setLonwp3(values[0].getFloat(MessageHandlerFGFS.LONWP4));
+					mMFD777.setLatwp4(values[0].getFloat(MessageHandlerFGFS.LATWP5));
+					mMFD777.setLonwp4(values[0].getFloat(MessageHandlerFGFS.LONWP5));
+					mMFD777.setLatwp5(values[0].getFloat(MessageHandlerFGFS.LATWP6));
+					mMFD777.setLonwp5(values[0].getFloat(MessageHandlerFGFS.LONWP6));
+					mMFD777.setLatwp6(values[0].getFloat(MessageHandlerFGFS.LATWP7));
+					mMFD777.setLonwp6(values[0].getFloat(MessageHandlerFGFS.LONWP7));
+					mMFD777.setLatwp7(values[0].getFloat(MessageHandlerFGFS.LATWP8));
+					mMFD777.setLonwp7(values[0].getFloat(MessageHandlerFGFS.LONWP8));
+					mMFD777.setLatwp8(values[0].getFloat(MessageHandlerFGFS.LATWP9));
+					mMFD777.setLonwp8(values[0].getFloat(MessageHandlerFGFS.LONWP9));
+					mMFD777.setLatwp9(values[0].getFloat(MessageHandlerFGFS.LATWP10));
+					mMFD777.setLonwp9(values[0].getFloat(MessageHandlerFGFS.LONWP10));
+					
 					//Check if the database needs update
 					if (mMFD777.plane.checkUpdateDBNeeded()) {
 						mMFD777.plane.updateDB();

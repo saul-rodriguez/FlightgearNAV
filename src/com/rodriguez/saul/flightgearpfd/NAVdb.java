@@ -82,8 +82,8 @@ public class NAVdb {
 				//Split the data in lines
 				outData = data.split("\n");
 				
-				Log.d("Saul",outData[26700]);
-				Log.d("Saul", String.format("lenght = %d",outData.length));
+				//Log.d("Saul",outData[26700]);
+				//Log.d("Saul", String.format("lenght = %d",outData.length));
 				
 				
 				//Fill class variables
@@ -99,8 +99,8 @@ public class NAVdb {
 				}
 				
 				
-				Log.d("Saul",String.format("ID = %d, LAT = %f, LON = %f, NAM = ",ID[0],latitude[0],longitude[0])+name[0]);
-				Log.d("Saul",String.format("ID = %d, LAT = %f, LON = %f, NAM = ",ID[SIZE-1],latitude[SIZE-1],longitude[SIZE-1])+name[SIZE-1]);
+				//Log.d("Saul",String.format("ID = %d, LAT = %f, LON = %f, NAM = ",ID[0],latitude[0],longitude[0])+name[0]);
+				//Log.d("Saul",String.format("ID = %d, LAT = %f, LON = %f, NAM = ",ID[SIZE-1],latitude[SIZE-1],longitude[SIZE-1])+name[SIZE-1]);
 				//, LAT = %f, LON = %f",ID[0],latitude[0],longitude[0]);
 				
 	}
@@ -119,7 +119,7 @@ public class NAVdb {
 				mlatitude[mnear] = latitude[i];
 				mlongitude[mnear] = longitude[i];
 				mname[mnear] = name[i];
-				Log.d("Saul",String.format("%d ",mnear)+mname[mnear]);
+				//Log.d("Saul",String.format("%d ",mnear)+mname[mnear]);
 				mnear++;
 								
 				if (mnear == SIZE_NEAR)					

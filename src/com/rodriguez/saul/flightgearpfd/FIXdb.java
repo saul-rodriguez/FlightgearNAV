@@ -100,8 +100,8 @@ Context mContext;
 				}
 				
 				
-				Log.d("Saul",String.format("LAT = %f, LON = %f, NAM = ",latitude[0],longitude[0])+name[0]);
-				Log.d("Saul",String.format("LAT = %f, LON = %f, NAM = ",latitude[SIZE-1],longitude[SIZE-1])+name[SIZE-1]);
+				//Log.d("Saul",String.format("LAT = %f, LON = %f, NAM = ",latitude[0],longitude[0])+name[0]);
+				//Log.d("Saul",String.format("LAT = %f, LON = %f, NAM = ",latitude[SIZE-1],longitude[SIZE-1])+name[SIZE-1]);
 				//, LAT = %f, LON = %f",ID[0],latitude[0],longitude[0]);
 				
 	}
@@ -121,7 +121,7 @@ Context mContext;
 				mlatitude[mnear] = latitude[i];
 				mlongitude[mnear] = longitude[i];
 				mname[mnear] = name[i];
-				Log.d("Saul",String.format("%d ",mnear)+mname[mnear]);
+				//Log.d("Saul",String.format("%d ",mnear)+mname[mnear]);
 				mnear++;
 								
 				if (mnear == SIZE_NEAR)					

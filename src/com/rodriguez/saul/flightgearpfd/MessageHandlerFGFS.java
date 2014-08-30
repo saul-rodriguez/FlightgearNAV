@@ -97,37 +97,27 @@ public class MessageHandlerFGFS {
 	public static final int LATITUDE = 35;
 	public static final int LONGITUDE = 36;
 	
+	public static final int LATWP1 = 37;
+	public static final int LONWP1 = 38;
+	public static final int LATWP2 = 39;
+	public static final int LONWP2 = 40;
+	public static final int LATWP3 = 41;
+	public static final int LONWP3 = 42;
+	public static final int LATWP4 = 43;
+	public static final int LONWP4 = 44;
+	public static final int LATWP5 = 45;
+	public static final int LONWP5 = 46;
+	public static final int LATWP6 = 47;
+	public static final int LONWP6 = 48;
+	public static final int LATWP7 = 49;
+	public static final int LONWP7 = 50;
+	public static final int LATWP8 = 51;
+	public static final int LONWP8 = 52;
+	public static final int LATWP9 = 53;
+	public static final int LONWP9 = 54;
+	public static final int LATWP10 = 55;
+	public static final int LONWP10 = 56;
 	
-	/*
-	public static final int SPEED = 0; // speed, in knots
-	public static final int ALTITUDE = 1; // altitude, in feet, according to the instruments
-	public static final int VS = 2; //vertical speed (rate of climb) in fpm (needs to be transformed to fps!)
-	public static final int PITCH = 3; //pitch angle degrees
-	public static final int ROLL = 4; //roll angle in degrees	
-	public static final int HEADING = 5; // heading in degrees
-	public static final int NAV1QUALITY = 6; // is a selected NAV localizer in range? 
-	public static final int NAV1LOC = 7; //is the selected NAV present?
-	public static final int NAV1DEF = 8; // NAV1 normalizedr deflection (-1 to 1)
-	public static final int GSACTIVATED = 9; // is the glideslope activated?
-	public static final int GSINRANGE = 10; // is the glideslope in range?
-	public static final int GSDEF = 11; // glideslope normalized deflection (-1 to 1)
-	public static final int RADIOALTIMETER = 12; // ground altitude in feet (int)
-	public static final int MACHSPEED = 13; // mach speed, ground referred?
-	public static final int STALLSPEED = 14; // minimum speed
-	public static final int STALLWARNING = 15; // minimum speed
-	public static final int FLAPS = 16; //flap status (float)
-	public static final int MAXSPEED = 17; //flap status (float)
-	public static final int AP = 18; // autopilot status (Activated/deactivated)
-	public static final int PITCHMODE = 19; //AP Pitch conf. status
-	public static final int ROLLMODE = 20; //AP Roll conf. status
-	public static final int SPEEDMODE = 21; //AP Roll conf. status
-	public static final int APALTITUDE = 22; //AP set altitude
-	public static final int APACTUALALT = 23; //AP actual altitude
-	public static final int APSPEED = 24; // AP set speed
-	public static final int APHEADING = 25; // AP heading bug
-	public static final int DMEINRANGE = 26; // DME in range ?
-	public static final int DME = 27;
-	*/
 	
 	public int getInt(int i) 
 	{

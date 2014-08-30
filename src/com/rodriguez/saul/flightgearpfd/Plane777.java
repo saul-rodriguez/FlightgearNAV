@@ -49,6 +49,7 @@ public class Plane777 extends Plane {
 	Bitmap ndvor;
 	Bitmap ndvortac;
 	Bitmap ndfix;
+	Bitmap ndwp;
 	
 			
 	Matrix maskMatrix;
@@ -78,6 +79,7 @@ public class Plane777 extends Plane {
 	
 	Matrix ndvorMatrix;
 	Matrix ndfixMatrix;
+	Matrix ndwpMatrix;
 	
 	
 	Context mContext;
@@ -120,6 +122,8 @@ public class Plane777 extends Plane {
 		cirbackMatrix = new Matrix();
 		ndvorMatrix = new Matrix();
 		ndfixMatrix = new Matrix();
+		ndwpMatrix = new Matrix();
+		
 		//Load bitmaps
 		
 		mask = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.navmask);
@@ -166,6 +170,7 @@ public class Plane777 extends Plane {
 		//ndvor = Bitmap.createBitmap(ndsymbols, 79, 0, 38, 34);
 		ndvor = Bitmap.createBitmap(ndsymbols, 79, 0, 38, 34);
 		ndfix = Bitmap.createBitmap(ndsymbols, 160, 0, 30, 26);
+		ndwp = Bitmap.createBitmap(ndsymbols, 191, 0, 48, 49);
 		
 		//Initialize all the parameters
 		scaleFactor = (float)1.0;
@@ -234,7 +239,13 @@ public class Plane777 extends Plane {
 		reflon = 0;
 		
 		shownav = true;
+		showcir = true;
+		showroute = true;
 			
+		//route
+		latwp = new float[10];
+		lonwp = new float[10];
+		
 		
 	}
 	
@@ -348,7 +359,11 @@ public class Plane777 extends Plane {
 		//Draw NAV objects
 		if (shownav)
 			drawNAVobjects(canvas,paint,offsety);
-				
+			
+		//Draw Route wp
+		if (showroute)
+			drawRoute(canvas,paint,offsety);
+		
 		//draw mask
 		canvas.drawBitmap(maskfull,maskfullMatrix,paint);
 				
@@ -503,8 +518,13 @@ public class Plane777 extends Plane {
 		if (shownav)
 			drawNAVobjects(canvas,paint,offsety);
 		
+		//Draw Route wp
+		if (showroute)
+			drawRoute(canvas,paint,offsety);
+		
 		//Draw Concentric Circles
-		drawCircles(canvas,paint);
+		if (showcir)
+			drawCircles(canvas,paint);
 				
 		//draw mask
 		canvas.drawBitmap(mask,maskMatrix,paint);
@@ -1326,6 +1346,60 @@ public class Plane777 extends Plane {
 					paint);			
 		}
 		
+		
+	}
+	
+	void drawRoute(Canvas canvas, Paint paint, int offsety)
+	{
+		paint.setColor(Color.MAGENTA);
+		paint.setStyle(Style.STROKE);
+		paint.setTextSize((float)(10*scaleFactor));
+		paint.setStrokeWidth(2*scaleFactor);
+				
+				
+		float dist,distx, disty, angle;
+
+		float pointx[] = new float[10];
+		float pointy[] = new float[10];
+		
+		int count = 0;
+		
+		for (int i = 0; i<10; i++ ){
+			if (latwp[i] == 0 && lonwp[i] == 0)
+				break;
+			
+			count++;
+			
+			dist = fixdb.calcDistance(lat, lon, latwp[i], lonwp[i]);
+			distx = (float)fixdb.distx;
+			disty = (float)fixdb.disty;
+			
+			distx = (distx/1852)*(324/range); //pixels
+			disty = (disty/1852)*(324/range); //pixels
+			dist = (dist/1852)*(324/range); //pixels
+			
+			angle = (float)Math.atan2(disty,distx);						
+			//angle = angle + (float)(heading/180*Math.PI);
+			angle = angle + (float)(realheading/180*Math.PI);
+			
+			distx = (float) (dist*Math.cos(angle));
+			disty = (float)(dist*Math.sin(angle));
+			
+			ndwpMatrix.reset();
+			ndwpMatrix.postTranslate(-ndwp.getWidth()/2, -ndwp.getHeight()/2);
+			ndwpMatrix.postScale((float)(0.5*scaleFactor), (float)(0.5*scaleFactor));
+			pointx[i] = centerx + (float)distx*scaleFactor;
+			pointy[i] = centery + (float)((offsety-disty)*scaleFactor);
+			//ndwpMatrix.postTranslate(centerx + (float)distx*scaleFactor, centery + (float)((offsety-disty)*scaleFactor));
+			ndwpMatrix.postTranslate(pointx[i],pointy[i]);
+			
+			canvas.drawBitmap(ndwp, ndwpMatrix, paint);
+				
+		}
+		
+		for (int i = 0; i <(count-1); i++) {
+			canvas.drawLine(pointx[i], pointy[i], pointx[i+1], pointy[i+1], paint);
+		}
 		
 	}
 }

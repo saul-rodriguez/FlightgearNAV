@@ -124,12 +124,31 @@ public class MFD777View extends SurfaceView implements SurfaceHolder.Callback {
 
 	    switch (event.getAction()) {
 	    	case MotionEvent.ACTION_DOWN:
-	    		if (plane.shownav == true) {
-	    			plane.shownav = false;
-	    		} else {
-	    			plane.shownav = true;	    			
+	    		if (eventX < centerx && eventY < centery) { 
+	    			if (plane.shownav == true) {
+	    				plane.shownav = false;
+	    			} else {
+	    				plane.shownav = true;	    			
+	    			}
 	    		}
-	    			
+	    		
+	    		if (eventX > centerx && eventY < centery) { 
+	    			if (plane.showcir == true) {
+	    				plane.showcir = false;
+	    			} else {
+	    				plane.showcir = true;	    			
+	    			}
+	    		}
+	    		
+	    		if (eventX < centerx && eventY > centery) { 
+	    			if (plane.showroute == true) {
+	    				plane.showroute = false;
+	    			} else {
+	    				plane.showroute = true;	    			
+	    			}
+	    		}
+	    		
+	    		
 	    		break;
 	    	case MotionEvent.ACTION_MOVE:
 	    		break;
@@ -386,6 +405,105 @@ public class MFD777View extends SurfaceView implements SurfaceHolder.Callback {
 		plane.lon = newLon;
 	}
 	
+	void setLatwp0(float la)
+	{
+		plane.latwp[0] = la;
+	}
+	
+	void setLonwp0(float lo)
+	{
+		plane.lonwp[0] = lo;
+	}
+	
+	void setLatwp1(float la)
+	{
+		plane.latwp[1] = la;
+	}
+	
+	void setLonwp1(float lo)
+	{
+		plane.lonwp[1] = lo;
+	}
+	
+	void setLatwp2(float la)
+	{
+		plane.latwp[2] = la;
+	}
+	
+	void setLonwp2(float lo)
+	{
+		plane.lonwp[2] = lo;
+	}
+	
+	void setLatwp3(float la)
+	{
+		plane.latwp[3] = la;
+	}
+	
+	void setLonwp3(float lo)
+	{
+		plane.lonwp[3] = lo;
+	}
+	
+	void setLatwp4(float la)
+	{
+		plane.latwp[4] = la;
+	}
+	
+	void setLonwp4(float lo)
+	{
+		plane.lonwp[4] = lo;
+	}
+	
+	void setLatwp5(float la)
+	{
+		plane.latwp[5] = la;
+	}
+	
+	void setLonwp5(float lo)
+	{
+		plane.lonwp[5] = lo;
+	}
+	
+	void setLatwp6(float la)
+	{
+		plane.latwp[6] = la;
+	}
+	
+	void setLonwp6(float lo)
+	{
+		plane.lonwp[6] = lo;
+	}
+
+	void setLatwp7(float la)
+	{
+		plane.latwp[7] = la;
+	}
+	
+	void setLonwp7(float lo)
+	{
+		plane.lonwp[7] = lo;
+	}
+	
+	void setLatwp8(float la)
+	{
+		plane.latwp[8] = la;
+	}
+	
+	void setLonwp8(float lo)
+	{
+		plane.lonwp[8] = lo;
+	}
+
+	void setLatwp9(float la)
+	{
+		plane.latwp[9] = la;
+	}
+	
+	void setLonwp9(float lo)
+	{
+		plane.lonwp[9] = lo;
+	}
 	/*
 	void SetSpeed(float newSpeed) 
 	{
