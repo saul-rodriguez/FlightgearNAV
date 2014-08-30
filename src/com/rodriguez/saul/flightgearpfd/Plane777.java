@@ -472,8 +472,11 @@ public class Plane777 extends Plane {
 		//Hide borders
 		paint.setColor(Color.rgb(0xb6, 0xb2, 0xa7));
 		paint.setStyle(Paint.Style.FILL_AND_STROKE);		
-		canvas.drawRect((centerx - 380*scaleFactor), 0, (centerx - 256*scaleFactor), 2*centery, paint);
-		canvas.drawRect((centerx + 256*scaleFactor), 0, (centerx + 380*scaleFactor), 2*centery, paint);
+		//canvas.drawRect((centerx - 380*scaleFactor), 0, (centerx - 256*scaleFactor), 2*centery, paint);
+		//canvas.drawRect((centerx + 256*scaleFactor), 0, (centerx + 380*scaleFactor), 2*centery, paint);
+		
+		canvas.drawRect(0, 0, (centerx - 256*scaleFactor), 2*centery, paint);
+		canvas.drawRect((centerx + 256*scaleFactor), 0, 2*centerx, 2*centery, paint);
 	}
 	
 	public void drawArc(Canvas canvas, Paint paint, int curmode)
@@ -617,8 +620,10 @@ public class Plane777 extends Plane {
 		//Hide borders
 		paint.setColor(Color.rgb(0xb6, 0xb2, 0xa7));
 		paint.setStyle(Paint.Style.FILL_AND_STROKE);		
-		canvas.drawRect((centerx - 380*scaleFactor), 0, (centerx - 256*scaleFactor), 2*centery, paint);
-		canvas.drawRect((centerx + 256*scaleFactor), 0, (centerx + 380*scaleFactor), 2*centery, paint);
+		//canvas.drawRect((centerx - 380*scaleFactor), 0, (centerx - 256*scaleFactor), 2*centery, paint);
+		//canvas.drawRect((centerx + 256*scaleFactor), 0, (centerx + 380*scaleFactor), 2*centery, paint);
+		canvas.drawRect(0, 0, (centerx - 256*scaleFactor), 2*centery, paint);
+		canvas.drawRect((centerx + 256*scaleFactor), 0, 2*centerx, 2*centery, paint);
 		
 	}
 	
@@ -1248,7 +1253,7 @@ public class Plane777 extends Plane {
 			dist = (dist/1852)*(324/range); //pixels
 			
 			angle = (float)Math.atan2(disty,distx);						
-			angle = angle + (float)(heading/180*Math.PI);
+			angle = angle + (float)(realheading/180*Math.PI);
 			
 			distx = (float) (dist*Math.cos(angle));
 			disty = (float)(dist*Math.sin(angle));
@@ -1299,7 +1304,8 @@ public class Plane777 extends Plane {
 			dist = (dist/1852)*(324/range); //pixels
 			
 			angle = (float)Math.atan2(disty,distx);						
-			angle = angle + (float)(heading/180*Math.PI);
+			//angle = angle + (float)(heading/180*Math.PI);
+			angle = angle + (float)(realheading/180*Math.PI);
 			
 			distx = (float) (dist*Math.cos(angle));
 			disty = (float)(dist*Math.sin(angle));

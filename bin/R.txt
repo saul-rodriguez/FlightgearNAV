@@ -269,11 +269,12 @@ int drawable navmask 0x7f02006a
 int drawable navmaskfull 0x7f02006b
 int drawable navsymbols 0x7f02006c
 int drawable nd_symbols 0x7f02006d
-int drawable speed_altitude 0x7f02006e
-int drawable speed_altitudea330 0x7f02006f
-int drawable vs 0x7f020070
-int drawable vs787 0x7f020071
-int drawable vsa330 0x7f020072
+int drawable planebmp 0x7f02006e
+int drawable speed_altitude 0x7f02006f
+int drawable speed_altitudea330 0x7f020070
+int drawable vs 0x7f020071
+int drawable vs787 0x7f020072
+int drawable vsa330 0x7f020073
 int id TextView01 0x7f050052
 int id action_bar 0x7f05002d
 int id action_bar_activity_content 0x7f050026

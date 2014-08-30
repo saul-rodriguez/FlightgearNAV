@@ -29,6 +29,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -61,6 +62,9 @@ public class PanelView extends Activity {
 	
 	NAVdb[] navdb;	
 	FIXdb[] fixdb;
+	
+	float displaydpi;
+	
 	
 	//Debug constant
 	private static final String MLOG = "PANELVIEW";
@@ -95,7 +99,15 @@ public class PanelView extends Activity {
 		fixdb[0].readDB();
 		
 		displayFlag = NAV;
-		loadView();
+		loadNAVView();
+		
+
+		DisplayMetrics metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		
+		displaydpi = metrics.densityDpi;
+		
+		Log.d("Saul",String.format("DPI = %f",displaydpi));
 				
 		Log.d(MLOG,"Port: " + String.format("%d", udpPort));
 	}
@@ -136,8 +148,8 @@ public class PanelView extends Activity {
 			
 			Log.d(MLOG,"Starting threads");
 			
-			mMFD777.plane.reflat = 0;
-			mMFD777.plane.reflon = 0;
+			//mMFD777.plane.reflat = 0;
+			//mMFD777.plane.reflon = 0;
 			
 			if (udpReceiver == null) {
 			     udpReceiver = (UDPReceiver) new UDPReceiver().execute(udpPort);
@@ -225,21 +237,32 @@ public class PanelView extends Activity {
 				int mode = (values[0].getInt(MessageHandlerFGFS.MODE));
 				
 				if (displayFlag == MAP) {
-					if (mode < 3) { // Change to MAP
+					
+					if (mode < 3) { // Change to NAV
 						displayFlag = NAV;
-						loadView();
+												
+						loadNAVView();
 						return;
 					}
+					// Update webview
+					myWeb.setMode(values[0].getInt(MessageHandlerFGFS.MODE));
+					myWeb.setRange(values[0].getInt(MessageHandlerFGFS.RANGE));
+					myWeb.setLat(values[0].getFloat(MessageHandlerFGFS.LATITUDE));
+					myWeb.setLon(values[0].getFloat(MessageHandlerFGFS.LONGITUDE));
+					myWeb.setRadhead(values[0].getFloat(MessageHandlerFGFS.RADIALHEAD));
+					
+					myWeb.updateRange();
 					
 					
 				} else if (displayFlag == NAV){
 					
 					if (mode == 3) { // Change to MAP
 						displayFlag = MAP;
-						loadView();
+						loadWebView(values);
 						return;
 					}
 				
+					//update NAV
 					mMFD777.setHeading(values[0].getFloat(MessageHandlerFGFS.HEADING));
 					mMFD777.setAPheading(values[0].getInt(MessageHandlerFGFS.APHEADING));
 				
@@ -310,7 +333,7 @@ public class PanelView extends Activity {
 	    	
 	    }
 
-		public void loadView() {
+		public void loadNAVView() {
 			
 			
 			int btnGravity = Gravity.LEFT;
@@ -325,22 +348,46 @@ public class PanelView extends Activity {
 			//Remove any previously created view
 			llMain.removeAllViews();
 			
-			if (displayFlag == NAV)	{
-				//Attach the custom view to a MFD777 object
+			//Attach the custom view to a MFD777 object
 				
-				mMFD777 = new MFD777View(this,null);
-				llMain.addView(mMFD777,lParams);
+			mMFD777 = new MFD777View(this,null);
+			llMain.addView(mMFD777,lParams);
 				
-				mMFD777.setPlane(selPlane);
-				mMFD777.plane.setdb(navdb,fixdb);
-			} else if (displayFlag == MAP) {
-				myWeb = new myWebView(this);
-				llMain.addView(myWeb,lParams);
-				myWeb.setWebViewClient(new WebViewClient());
-				myWeb.getSettings().setJavaScriptEnabled(true);
-				myWeb.loadUrl("http://skyvector.com/?ll=-0.2393181630572534,-78.46655272806412&chart=301&zoom=1");
-
-			}
+			mMFD777.setPlane(selPlane);
+			mMFD777.plane.setdb(navdb,fixdb);
+				
+			 			
+		}
+		
+		public void loadWebView(MessageHandlerFGFS[] values) {
+			
+			
+			int btnGravity = Gravity.LEFT;
+			//int wrapContent = LinearLayout.LayoutParams.WRAP_CONTENT;
+			int wrapContent = LinearLayout.LayoutParams.FILL_PARENT;
+			
+			LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(
+			          wrapContent, wrapContent);
+			
+			lParams.gravity = btnGravity;
+			
+			//Remove any previously created view
+			llMain.removeAllViews();
+			
+			//Attach the custom view to a webview object
+			myWeb = new myWebView(this);
+			llMain.addView(myWeb,lParams);
+			myWeb.setWebViewClient(new WebViewClient());
+			myWeb.getSettings().setJavaScriptEnabled(true);
+			
+			myWeb.dpi = displaydpi;
+			myWeb.setMode(values[0].getInt(MessageHandlerFGFS.MODE));
+			myWeb.setRange(values[0].getInt(MessageHandlerFGFS.RANGE));
+			myWeb.setLat(values[0].getFloat(MessageHandlerFGFS.LATITUDE));
+			myWeb.setLon(values[0].getFloat(MessageHandlerFGFS.LONGITUDE));
+			myWeb.updateRefPos(); //updates center of the map coord.
+			myWeb.updateRange();
+						
 			
 		}
 }
