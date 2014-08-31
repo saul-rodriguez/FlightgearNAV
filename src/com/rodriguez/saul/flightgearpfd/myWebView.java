@@ -56,6 +56,8 @@ public class myWebView  extends WebView {
 	
 	boolean showmap;  //true for map, false for chart
 	
+	int offsety;
+	
 	public myWebView(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
@@ -85,6 +87,9 @@ public class myWebView  extends WebView {
 		
 		showmap = true;  
 		
+		//offsety = (int)(0.7/2.54*dpi)/2;
+		
+		
 	}
 
 	@Override
@@ -96,7 +101,10 @@ public class myWebView  extends WebView {
 		height = this.getHeight();
 		
 		
+		//Offset assumes that top banner measures around 1.1cm and bottom banner 0,4 cm
+		offsety = (int)((1.1/2.54*dpi) + (height - 1.5/2.54*dpi)/2) - height/2;
 		//Log.d("Saul",String.format("Width WebView %d", width));
+		//Log.d("Saul",String.format("heigth WebView %d", height));
 		
 		Paint paint = new Paint();
 		paint.setAntiAlias(true);
@@ -106,8 +114,12 @@ public class myWebView  extends WebView {
 		//paint.setStyle(Style.STROKE);
 		//paint.setStrokeWidth(2);
 		
-		drawPlane(canvas,paint, 20);
-		drawRoute(canvas,paint, 20);
+		//drawPlane(canvas,paint, 0);
+		//drawRoute(canvas,paint, 0);
+		
+		drawPlane(canvas,paint, offsety);
+		drawRoute(canvas,paint, offsety);
+		
 		//canvas.drawCircle((float)(width/2. + distx),(float)(height/2. - (disty-20)), 10, paint);
 		
 	}
