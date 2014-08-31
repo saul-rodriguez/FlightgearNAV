@@ -251,6 +251,28 @@ public class PanelView extends Activity {
 					myWeb.setLon(values[0].getFloat(MessageHandlerFGFS.LONGITUDE));
 					myWeb.setRadhead(values[0].getFloat(MessageHandlerFGFS.RADIALHEAD));
 					
+					//route
+					myWeb.setLatwp0(values[0].getFloat(MessageHandlerFGFS.LATWP1));
+					myWeb.setLonwp0(values[0].getFloat(MessageHandlerFGFS.LONWP1));
+					myWeb.setLatwp1(values[0].getFloat(MessageHandlerFGFS.LATWP2));
+					myWeb.setLonwp1(values[0].getFloat(MessageHandlerFGFS.LONWP2));
+					myWeb.setLatwp2(values[0].getFloat(MessageHandlerFGFS.LATWP3));
+					myWeb.setLonwp2(values[0].getFloat(MessageHandlerFGFS.LONWP3));
+					myWeb.setLatwp3(values[0].getFloat(MessageHandlerFGFS.LATWP4));
+					myWeb.setLonwp3(values[0].getFloat(MessageHandlerFGFS.LONWP4));
+					myWeb.setLatwp4(values[0].getFloat(MessageHandlerFGFS.LATWP5));
+					myWeb.setLonwp4(values[0].getFloat(MessageHandlerFGFS.LONWP5));
+					myWeb.setLatwp5(values[0].getFloat(MessageHandlerFGFS.LATWP6));
+					myWeb.setLonwp5(values[0].getFloat(MessageHandlerFGFS.LONWP6));
+					myWeb.setLatwp6(values[0].getFloat(MessageHandlerFGFS.LATWP7));
+					myWeb.setLonwp6(values[0].getFloat(MessageHandlerFGFS.LONWP7));
+					myWeb.setLatwp7(values[0].getFloat(MessageHandlerFGFS.LATWP8));
+					myWeb.setLonwp7(values[0].getFloat(MessageHandlerFGFS.LONWP8));
+					myWeb.setLatwp8(values[0].getFloat(MessageHandlerFGFS.LATWP9));
+					myWeb.setLonwp8(values[0].getFloat(MessageHandlerFGFS.LONWP9));
+					myWeb.setLatwp9(values[0].getFloat(MessageHandlerFGFS.LATWP10));
+					myWeb.setLonwp9(values[0].getFloat(MessageHandlerFGFS.LONWP10));
+					
 					myWeb.updateRange();
 					
 					

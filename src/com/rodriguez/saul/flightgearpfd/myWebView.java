@@ -9,6 +9,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.webkit.WebView;
 
 
@@ -49,6 +50,12 @@ public class myWebView  extends WebView {
 	float scaleFactor;
 	float realheading;
 	
+	//waypoint
+	float[] latwp;
+	float[] lonwp;
+	
+	boolean showmap;  //true for map, false for chart
+	
 	public myWebView(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
@@ -71,6 +78,13 @@ public class myWebView  extends WebView {
 		planeMatrix = new Matrix();
 		planebmp = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.planebmp);
 		//planebmp = Bitmap.createBitmap(symbols, 0, 0, 67, 85);
+		
+		//route
+		latwp = new float[10];
+		lonwp = new float[10];
+		
+		showmap = true;  
+		
 	}
 
 	@Override
@@ -92,16 +106,19 @@ public class myWebView  extends WebView {
 		//paint.setStyle(Style.STROKE);
 		//paint.setStrokeWidth(2);
 		
-		drawPlane(canvas,paint);
+		drawPlane(canvas,paint, 20);
+		drawRoute(canvas,paint, 20);
 		//canvas.drawCircle((float)(width/2. + distx),(float)(height/2. - (disty-20)), 10, paint);
 		
 	}
 	
-	void drawPlane(Canvas canvas, Paint paint)
+	void drawPlane(Canvas canvas, Paint paint, int offsety)
 	{
+		calcDistance(reflat,reflon,lat,lon);
+		dist2pixels();
 		
 		float aux;
-		
+				
 		aux = (float)(1/2.54*dpi); //real height of plane = 1cm
 		scaleFactor = aux/planebmp.getHeight();
 		
@@ -110,17 +127,84 @@ public class myWebView  extends WebView {
 		planeMatrix.postScale(scaleFactor, scaleFactor);
 		planeMatrix.postRotate(realheading);
 				
-		planeMatrix.postTranslate((float)(width/2 + distx),(float)(height/2 + 20 - disty));
+		planeMatrix.postTranslate((float)(width/2 + distx),(float)(height/2 + offsety - disty));
 								
 		canvas.drawBitmap(planebmp, planeMatrix, paint);
 	}
 
+	void drawRoute(Canvas canvas, Paint paint, int offsety)
+	{
+		paint.setColor(Color.MAGENTA);
+		paint.setStyle(Style.STROKE);
+		paint.setTextSize((float)(10*scaleFactor));
+		paint.setStrokeWidth(2*scaleFactor);
+				
+				
+		//float dist,distx, disty, angle;
+
+		float dist,angle;
+		float pointx[] = new float[10];
+		float pointy[] = new float[10];
+		
+		int count = 0;
+		
+		for (int i = 0; i<10; i++ ){
+			if (latwp[i] == 0 && lonwp[i] == 0)
+				break;
+			
+			count++;
+			
+			calcDistance(reflat,reflon,latwp[i],lonwp[i]);
+			dist2pixels();
+			
+			if (showmap == false) { //Correct distances for World hi charts
+				distx *= 0.375;
+				disty *= 0.375;				
+			}
+			
+			//dist = fixdb.calcDistance(lat, lon, latwp[i], lonwp[i]);
+			//distx = (float)fixdb.distx;
+			//disty = (float)fixdb.disty;
+			
+			//distx = (distx/1852)*(324/range); //pixels
+			//disty = (disty/1852)*(324/range); //pixels
+			//dist = (dist/1852)*(324/range); //pixels
+			
+			//angle = (float)Math.atan2(disty,distx);						
+			//angle = angle + (float)(heading/180*Math.PI);
+			//angle = angle + (float)(realheading/180*Math.PI);
+			
+			//distx = (float) (dist*Math.cos(angle));
+			//disty = (float)(dist*Math.sin(angle));
+			/*
+			ndwpMatrix.reset();
+			ndwpMatrix.postTranslate(-ndwp.getWidth()/2, -ndwp.getHeight()/2);
+			ndwpMatrix.postScale((float)(0.5*scaleFactor), (float)(0.5*scaleFactor));
+			*/
+		
+			pointx[i] = width/2 + (float)distx;
+			pointy[i] = height/2 + (float)((offsety-disty));
+			//ndwpMatrix.postTranslate(centerx + (float)distx*scaleFactor, centery + (float)((offsety-disty)*scaleFactor));
+			/*
+			ndwpMatrix.postTranslate(pointx[i],pointy[i]);
+			
+			canvas.drawBitmap(ndwp, ndwpMatrix, paint);
+				*/
+		}
+		
+		for (int i = 0; i <(count-1); i++) {
+			canvas.drawLine(pointx[i], pointy[i], pointx[i+1], pointy[i+1], paint);
+		}
+		
+	}
+	
+	
 	void updateRange() {
 		
 		if (rangeref == range) {
 			//Calculate plane distances 
-			calcDistance(reflat,reflon,lat,lon);
-			dist2pixels();
+			//calcDistance(reflat,reflon,lat,lon);
+			//dist2pixels();
 			
 			invalidate();
 			
@@ -132,6 +216,12 @@ public class myWebView  extends WebView {
 		
 		rangeref = range;
 		
+		loadSkyvector();
+		
+	}
+	
+	void loadSkyvector() 
+	{
 		int range_aux;
 		
 		switch (range) {
@@ -168,9 +258,16 @@ public class myWebView  extends WebView {
 						break;
 		}
 		
-		String aux = "http://skyvector.com/?ll=" + String.format("%f", lat) + "," + String.format("%f", lon) + 
-				"&chart=301&zoom=" + String.format("%d", range_aux);
+		String aux;
+		if (showmap == true) {
+			aux = "http://skyvector.com/?ll=" + String.format("%f", lat) + "," + String.format("%f", lon) + 
+					"&chart=301&zoom=" + String.format("%d", range_aux);
+		} else {
+			aux = "http://skyvector.com/?ll=" + String.format("%f", lat) + "," + String.format("%f", lon) + 
+					"&chart=304&zoom=" + String.format("%d", range_aux);
+		}
 		this.loadUrl(aux);
+		
 	}
 	
 	float calcDistance(float Lat1, float Lon1, float Lat2, float Lon2)
@@ -197,8 +294,8 @@ public class myWebView  extends WebView {
 	
 	void dist2pixels()
 	{
-		distx = (distx/1852.0)*(12.3/30)*(1/2.54)*dpi/rangescale; //12.3cm = 30nm
-		disty = (disty/1852.0)*(12.3/30)*(1/2.54)*dpi/rangescale;		
+		distx = (distx/1852.0)*(12./30)*(1/2.54)*dpi/rangescale; //12.3cm = 30nm
+		disty = (disty/1852.0)*(12./30)*(1/2.54)*dpi/rangescale;		
 	}
 	
 	//updates center of the map coord.
@@ -207,8 +304,43 @@ public class myWebView  extends WebView {
 		reflon = lon;
 	}
 	
+	@Override
+	  public boolean onTouchEvent(MotionEvent event) {
+	    float eventX = event.getX();
+	    float eventY = event.getY();
+
+	    switch (event.getAction()) {
+	    	case MotionEvent.ACTION_DOWN:
+	    			if (showmap == true){
+	    				showmap = false;
+	    			} else {
+	    				showmap = true;
+	    			}
+	    			loadSkyvector();
+	    	/*	if (eventX < centerx && eventY < centery) { // left Up
+	    			if (plane.shownav == true) {
+	    				plane.shownav = false;
+	    			} else {
+	    				plane.shownav = true;	    			
+	    			}
+	    		}*/
+	    		Log.d("Saul","pressed touchscreen skyvector");
+	    	    		
+	    		break;
+	    	case MotionEvent.ACTION_MOVE:
+	    		break;
+	    	case MotionEvent.ACTION_UP:
+	            break;
+	    	default:
+	    		return false;
+	    }
+	    	    
+	    return true;
+	  }
 	
 	
+	
+	//setters
 	void setMode(int newmode)
 	{
 		mode = newmode;
@@ -232,5 +364,106 @@ public class myWebView  extends WebView {
 	void setRadhead(float head)
 	{
 		realheading = head;
+	}
+	
+
+	void setLatwp0(float la)
+	{
+		latwp[0] = la;
+	}
+	
+	void setLonwp0(float lo)
+	{
+		lonwp[0] = lo;
+	}
+	
+	void setLatwp1(float la)
+	{
+		latwp[1] = la;
+	}
+	
+	void setLonwp1(float lo)
+	{
+		lonwp[1] = lo;
+	}
+	
+	void setLatwp2(float la)
+	{
+		latwp[2] = la;
+	}
+	
+	void setLonwp2(float lo)
+	{
+		lonwp[2] = lo;
+	}
+	
+	void setLatwp3(float la)
+	{
+		latwp[3] = la;
+	}
+	
+	void setLonwp3(float lo)
+	{
+		lonwp[3] = lo;
+	}
+	
+	void setLatwp4(float la)
+	{
+		latwp[4] = la;
+	}
+	
+	void setLonwp4(float lo)
+	{
+		lonwp[4] = lo;
+	}
+	
+	void setLatwp5(float la)
+	{
+		latwp[5] = la;
+	}
+	
+	void setLonwp5(float lo)
+	{
+		lonwp[5] = lo;
+	}
+	
+	void setLatwp6(float la)
+	{
+		latwp[6] = la;
+	}
+	
+	void setLonwp6(float lo)
+	{
+		lonwp[6] = lo;
+	}
+
+	void setLatwp7(float la)
+	{
+		latwp[7] = la;
+	}
+	
+	void setLonwp7(float lo)
+	{
+		lonwp[7] = lo;
+	}
+	
+	void setLatwp8(float la)
+	{
+		latwp[8] = la;
+	}
+	
+	void setLonwp8(float lo)
+	{
+		lonwp[8] = lo;
+	}
+
+	void setLatwp9(float la)
+	{
+		latwp[9] = la;
+	}
+	
+	void setLonwp9(float lo)
+	{
+		lonwp[9] = lo;
 	}
 }

@@ -241,6 +241,7 @@ public class Plane777 extends Plane {
 		shownav = true;
 		showcir = true;
 		showroute = true;
+		showfix = true;
 			
 		//route
 		latwp = new float[10];
@@ -360,6 +361,9 @@ public class Plane777 extends Plane {
 		if (shownav)
 			drawNAVobjects(canvas,paint,offsety);
 			
+		if (showfix)
+			drawFixobjects(canvas,paint,offsety);
+		
 		//Draw Route wp
 		if (showroute)
 			drawRoute(canvas,paint,offsety);
@@ -518,6 +522,9 @@ public class Plane777 extends Plane {
 		if (shownav)
 			drawNAVobjects(canvas,paint,offsety);
 		
+		if (showfix)
+			drawFixobjects(canvas,paint,offsety);
+				
 		//Draw Route wp
 		if (showroute)
 			drawRoute(canvas,paint,offsety);
@@ -1278,9 +1285,27 @@ public class Plane777 extends Plane {
 			distx = (float) (dist*Math.cos(angle));
 			disty = (float)(dist*Math.sin(angle));
 			
+			//Airports
+			if (navdb.mID[i] == 1) {
+				paint.setColor(Color.GREEN);
+				paint.setStrokeWidth((float)(1.5*scaleFactor));
+				
+				canvas.drawCircle(centerx + (float)distx*scaleFactor, 
+						centery + (float)((offsety-disty)*scaleFactor),
+						(float)(6*scaleFactor), paint);
+				
+				paint.setStrokeWidth(0);
+				canvas.drawText(navdb.mname[i],
+					centerx + (float)(distx + 7)*scaleFactor,
+					centery + (float)((offsety-disty+10)*scaleFactor),
+					paint);
+			}
+			
+			
 			//ADF
 			if (navdb.mID[i] == 2) {
 				paint.setColor(Color.CYAN);
+				
 				ndvorMatrix.reset();
 				ndvorMatrix.postTranslate(-ndvor.getWidth()/2, -ndvor.getHeight()/2);
 				ndvorMatrix.postScale((float)(0.5*scaleFactor), (float)(0.5*scaleFactor));
@@ -1311,42 +1336,52 @@ public class Plane777 extends Plane {
 			}
 		}
 		
+		
+		
+		
+	}
+	
+	void drawFixobjects(Canvas canvas, Paint paint, int offsety){
+		paint.setStyle(Style.STROKE);
+		paint.setTextSize((float)(10*scaleFactor));
+		paint.setStrokeWidth(0);
+		
+		
+		float dist,distx, disty, angle;
 		//Fix points
 		paint.setColor(Color.CYAN);
-		
+				
 		for (int i = 0; i<fixdb.mnear; i++ ){
 			dist = fixdb.calcDistance(lat, lon, fixdb.mlatitude[i], fixdb.mlongitude[i]);
 			distx = (float)fixdb.distx;
 			disty = (float)fixdb.disty;
-			
+					
 			distx = (distx/1852)*(324/range); //pixels
 			disty = (disty/1852)*(324/range); //pixels
 			dist = (dist/1852)*(324/range); //pixels
-			
+					
 			angle = (float)Math.atan2(disty,distx);						
 			//angle = angle + (float)(heading/180*Math.PI);
 			angle = angle + (float)(realheading/180*Math.PI);
-			
+					
 			distx = (float) (dist*Math.cos(angle));
 			disty = (float)(dist*Math.sin(angle));
-			
+					
 			ndfixMatrix.reset();
 			ndfixMatrix.postTranslate(-ndfix.getWidth()/2, -ndfix.getHeight()/2);
 			ndfixMatrix.postScale((float)(0.5*scaleFactor), (float)(0.5*scaleFactor));
 			ndfixMatrix.postTranslate(centerx + (float)distx*scaleFactor, centery + (float)((offsety-disty)*scaleFactor));
-			
+					
 			canvas.drawBitmap(ndfix, ndfixMatrix, paint);
-			//canvas.drawCircle(centerx + (float)distx*scaleFactor, 
-			//		centery + (float)((offsety-disty)*scaleFactor),
-			//		(float)(5*scaleFactor), paint);
-			
+					//canvas.drawCircle(centerx + (float)distx*scaleFactor, 
+					//		centery + (float)((offsety-disty)*scaleFactor),
+					//		(float)(5*scaleFactor), paint);
+					
 			canvas.drawText(fixdb.mname[i],
 					centerx + (float)(distx + 7)*scaleFactor,
 					centery + (float)((offsety-disty+10)*scaleFactor),
 					paint);			
 		}
-		
-		
 	}
 	
 	void drawRoute(Canvas canvas, Paint paint, int offsety)

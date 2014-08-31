@@ -12,7 +12,7 @@ public class NAVdb {
 	Context mContext;
 	
 	//NAV database related
-	static final int SIZE = 26700;
+	static final int SIZE = 38304;
 	static final int SIZE_NEAR = 50;
 	
 	int[] ID;
@@ -69,7 +69,7 @@ public class NAVdb {
 				byte[] bytesdata;
 				String[] outData;
 				
-				bytesdata = new byte[800000];
+				bytesdata = new byte[1194000];
 				try {
 					is.read(bytesdata);
 					//is.read

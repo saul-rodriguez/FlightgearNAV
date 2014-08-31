@@ -124,7 +124,7 @@ public class MFD777View extends SurfaceView implements SurfaceHolder.Callback {
 
 	    switch (event.getAction()) {
 	    	case MotionEvent.ACTION_DOWN:
-	    		if (eventX < centerx && eventY < centery) { 
+	    		if (eventX < centerx && eventY < centery) { // left Up
 	    			if (plane.shownav == true) {
 	    				plane.shownav = false;
 	    			} else {
@@ -132,7 +132,7 @@ public class MFD777View extends SurfaceView implements SurfaceHolder.Callback {
 	    			}
 	    		}
 	    		
-	    		if (eventX > centerx && eventY < centery) { 
+	    		if (eventX > centerx && eventY < centery) { //right up
 	    			if (plane.showcir == true) {
 	    				plane.showcir = false;
 	    			} else {
@@ -140,13 +140,22 @@ public class MFD777View extends SurfaceView implements SurfaceHolder.Callback {
 	    			}
 	    		}
 	    		
-	    		if (eventX < centerx && eventY > centery) { 
+	    		if (eventX < centerx && eventY > centery) { //left down
+	    			if (plane.showfix == true) {
+	    				plane.showfix = false;
+	    			} else {
+	    				plane.showfix = true;	    			
+	    			}
+	    		}
+	    		
+	    		if (eventX > centerx && eventY > centery) { //right down
 	    			if (plane.showroute == true) {
 	    				plane.showroute = false;
 	    			} else {
 	    				plane.showroute = true;	    			
 	    			}
 	    		}
+	    		
 	    		
 	    		
 	    		break;

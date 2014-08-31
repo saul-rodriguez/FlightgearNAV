@@ -69,6 +69,7 @@ public class Plane {
 	boolean shownav;
 	boolean showcir;
 	boolean showroute;
+	boolean showfix;
 	
 	//route
 	float[] latwp;
