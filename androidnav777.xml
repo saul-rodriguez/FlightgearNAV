@@ -419,6 +419,33 @@
     <node>/autopilot/route-manager/route/wp[9]/longitude-deg</node>
    </chunk>
 
+   <chunk>
+    <name>lat wp10</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/autopilot/route-manager/route/wp[10]/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>lon wp10</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/autopilot/route-manager/route/wp[10]/longitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>lat wp11</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/autopilot/route-manager/route/wp[11]/latitude-deg</node>
+   </chunk>
+
+   <chunk>
+    <name>lon wp11</name>
+    <type>float</type>
+    <format>%f</format>
+    <node>/autopilot/route-manager/route/wp[11]/longitude-deg</node>
+   </chunk>
 
 <!-- Waypoints section ends here -->
 

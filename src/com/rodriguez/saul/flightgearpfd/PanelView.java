@@ -272,6 +272,10 @@ public class PanelView extends Activity {
 					myWeb.setLonwp8(values[0].getFloat(MessageHandlerFGFS.LONWP9));
 					myWeb.setLatwp9(values[0].getFloat(MessageHandlerFGFS.LATWP10));
 					myWeb.setLonwp9(values[0].getFloat(MessageHandlerFGFS.LONWP10));
+					myWeb.setLatwp10(values[0].getFloat(MessageHandlerFGFS.LATWP11));
+					myWeb.setLonwp10(values[0].getFloat(MessageHandlerFGFS.LONWP11));
+					myWeb.setLatwp11(values[0].getFloat(MessageHandlerFGFS.LATWP12));
+					myWeb.setLonwp11(values[0].getFloat(MessageHandlerFGFS.LONWP12));
 					
 					myWeb.updateRange();
 					
@@ -362,6 +366,10 @@ public class PanelView extends Activity {
 					mMFD777.setLonwp8(values[0].getFloat(MessageHandlerFGFS.LONWP9));
 					mMFD777.setLatwp9(values[0].getFloat(MessageHandlerFGFS.LATWP10));
 					mMFD777.setLonwp9(values[0].getFloat(MessageHandlerFGFS.LONWP10));
+					mMFD777.setLatwp10(values[0].getFloat(MessageHandlerFGFS.LATWP11));
+					mMFD777.setLonwp10(values[0].getFloat(MessageHandlerFGFS.LONWP11));
+					mMFD777.setLatwp11(values[0].getFloat(MessageHandlerFGFS.LATWP12));
+					mMFD777.setLonwp11(values[0].getFloat(MessageHandlerFGFS.LONWP12));
 					
 					//Check if the database needs update
 					if (mMFD777.plane.checkUpdateDBNeeded()) {

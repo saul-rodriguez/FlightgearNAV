@@ -74,7 +74,7 @@ public class Plane {
 	//route
 	float[] latwp;
 	float[] lonwp;
-		
+	final int ROUTESIZE = 12; //number if waypoints
 	/*
 	float horizontRollAngle;
 	float horizontPitchAngle;	

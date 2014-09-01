@@ -1297,17 +1297,19 @@ containing a value of this type.
         public static final int mask=0x7f020066;
         public static final int maska330=0x7f020067;
         public static final int navhsi=0x7f020068;
-        public static final int navhsiarc=0x7f020069;
-        public static final int navmask=0x7f02006a;
-        public static final int navmaskfull=0x7f02006b;
-        public static final int navsymbols=0x7f02006c;
-        public static final int nd_symbols=0x7f02006d;
-        public static final int planebmp=0x7f02006e;
-        public static final int speed_altitude=0x7f02006f;
-        public static final int speed_altitudea330=0x7f020070;
-        public static final int vs=0x7f020071;
-        public static final int vs787=0x7f020072;
-        public static final int vsa330=0x7f020073;
+        public static final int navhsi2=0x7f020069;
+        public static final int navhsiarc=0x7f02006a;
+        public static final int navhsiarc2=0x7f02006b;
+        public static final int navmask=0x7f02006c;
+        public static final int navmaskfull=0x7f02006d;
+        public static final int navsymbols=0x7f02006e;
+        public static final int nd_symbols=0x7f02006f;
+        public static final int planebmp=0x7f020070;
+        public static final int speed_altitude=0x7f020071;
+        public static final int speed_altitudea330=0x7f020072;
+        public static final int vs=0x7f020073;
+        public static final int vs787=0x7f020074;
+        public static final int vsa330=0x7f020075;
     }
     public static final class id {
         public static final int TextView01=0x7f050052;

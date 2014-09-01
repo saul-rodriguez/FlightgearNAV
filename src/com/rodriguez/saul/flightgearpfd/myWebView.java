@@ -53,6 +53,7 @@ public class myWebView  extends WebView {
 	//waypoint
 	float[] latwp;
 	float[] lonwp;
+	final int ROUTESIZE = 12; //number if waypoints
 	
 	boolean showmap;  //true for map, false for chart
 	
@@ -82,8 +83,8 @@ public class myWebView  extends WebView {
 		//planebmp = Bitmap.createBitmap(symbols, 0, 0, 67, 85);
 		
 		//route
-		latwp = new float[10];
-		lonwp = new float[10];
+		latwp = new float[ROUTESIZE];
+		lonwp = new float[ROUTESIZE];
 		
 		showmap = true;  
 		
@@ -155,12 +156,12 @@ public class myWebView  extends WebView {
 		//float dist,distx, disty, angle;
 
 		float dist,angle;
-		float pointx[] = new float[10];
-		float pointy[] = new float[10];
+		float pointx[] = new float[ROUTESIZE];
+		float pointy[] = new float[ROUTESIZE];
 		
 		int count = 0;
 		
-		for (int i = 0; i<10; i++ ){
+		for (int i = 0; i<ROUTESIZE; i++ ){
 			if (latwp[i] == 0 && lonwp[i] == 0)
 				break;
 			
@@ -478,4 +479,25 @@ public class myWebView  extends WebView {
 	{
 		lonwp[9] = lo;
 	}
+	
+	void setLatwp10(float la)
+	{
+		latwp[10] = la;
+	}
+	
+	void setLonwp10(float lo)
+	{
+		lonwp[10] = lo;
+	}
+	
+	void setLatwp11(float la)
+	{
+		latwp[11] = la;
+	}
+	
+	void setLonwp11(float lo)
+	{
+		lonwp[11] = lo;
+	}
+	
 }

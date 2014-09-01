@@ -117,6 +117,10 @@ public class MessageHandlerFGFS {
 	public static final int LONWP9 = 54;
 	public static final int LATWP10 = 55;
 	public static final int LONWP10 = 56;
+	public static final int LATWP11 = 57;
+	public static final int LONWP11 = 58;
+	public static final int LATWP12 = 59;
+	public static final int LONWP12 = 60;
 	
 	
 	public int getInt(int i) 

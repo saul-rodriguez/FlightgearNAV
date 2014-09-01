@@ -128,8 +128,8 @@ public class Plane777 extends Plane {
 		
 		mask = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.navmask);
 		maskfull = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.navmaskfull);
-		hsi = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.navhsi);
-		hsiarc = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.navhsiarc);
+		hsi = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.navhsi2);
+		hsiarc = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.navhsiarc2);
 		symbols = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.navsymbols);
 		aphead = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.aphdg);
 		
@@ -244,8 +244,9 @@ public class Plane777 extends Plane {
 		showfix = true;
 			
 		//route
-		latwp = new float[10];
-		lonwp = new float[10];
+		
+		latwp = new float[ROUTESIZE];
+		lonwp = new float[ROUTESIZE];
 		
 		
 	}
@@ -656,7 +657,9 @@ public class Plane777 extends Plane {
 	
 	public void drawWind(Canvas canvas, Paint paint)
 	{
-		float rotation = heading - (float)(apheading);
+		//float rotation = heading - (float)(apheading);
+		
+		float rotation = realheading;
 		
 		String aux;
 				
@@ -1394,12 +1397,12 @@ public class Plane777 extends Plane {
 				
 		float dist,distx, disty, angle;
 
-		float pointx[] = new float[10];
-		float pointy[] = new float[10];
+		float pointx[] = new float[ROUTESIZE];
+		float pointy[] = new float[ROUTESIZE];
 		
 		int count = 0;
 		
-		for (int i = 0; i<10; i++ ){
+		for (int i = 0; i<ROUTESIZE; i++ ){
 			if (latwp[i] == 0 && lonwp[i] == 0)
 				break;
 			
