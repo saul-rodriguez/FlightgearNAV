@@ -248,6 +248,9 @@ public class Plane777 extends Plane {
 		latwp = new float[ROUTESIZE];
 		lonwp = new float[ROUTESIZE];
 		
+		currentwp = "None";
+		numwp = 0;
+		
 		
 	}
 	
@@ -489,6 +492,9 @@ public class Plane777 extends Plane {
 		//Draw wind speed and heading
 		drawWind(canvas, paint);
 		
+		//Waypoint name
+		drawWPtext(canvas, paint);
+		
 		//Hide borders
 		paint.setColor(Color.rgb(0xb6, 0xb2, 0xa7));
 		paint.setStyle(Paint.Style.FILL_AND_STROKE);		
@@ -644,6 +650,9 @@ public class Plane777 extends Plane {
 		
 		//Draw wind speed and heading
 		drawWind(canvas, paint);
+		
+		//Waypoint name
+		drawWPtext(canvas, paint);
 		
 		//Hide borders
 		paint.setColor(Color.rgb(0xb6, 0xb2, 0xa7));
@@ -1402,9 +1411,9 @@ public class Plane777 extends Plane {
 		
 		int count = 0;
 		
-		for (int i = 0; i<ROUTESIZE; i++ ){
-			if (latwp[i] == 0 && lonwp[i] == 0)
-				break;
+		for (int i = 0; i<numwp; i++ ){
+			//if (latwp[i] == 0 && lonwp[i] == 0)
+			//	break;
 			
 			count++;
 			
@@ -1435,9 +1444,33 @@ public class Plane777 extends Plane {
 				
 		}
 		
-		for (int i = 0; i <(count-1); i++) {
+		for (int i = 0; i < (numwp - 1); i++) {
 			canvas.drawLine(pointx[i], pointy[i], pointx[i+1], pointy[i+1], paint);
 		}
 		
+		
+		
 	}
+	
+	void drawWPtext(Canvas canvas, Paint paint)
+	{
+		if (mode == 0) return;
+		
+		//Draw WP text 
+		paint.setColor(Color.MAGENTA);
+		paint.setStyle(Style.FILL_AND_STROKE);
+		paint.setTextSize(18*scaleFactor);
+		paint.setStrokeWidth((int)(0.8*scaleFactor));
+		//canvas.drawText("Hola", centerx, centery, paint);
+			
+		//Log.d("Saul",currentwp);
+				
+		if (currentwp.equals("")) {
+			canvas.drawText("N/A", centerx + (int)(200*scaleFactor), centery - (int)(230*scaleFactor), paint);
+		} else {
+			canvas.drawText(currentwp, centerx + (int)(200*scaleFactor), centery - (int)(230*scaleFactor), paint);
+		}
+		
+	}
+	
 }

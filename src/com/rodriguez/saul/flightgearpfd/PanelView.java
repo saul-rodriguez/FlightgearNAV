@@ -276,7 +276,7 @@ public class PanelView extends Activity {
 					myWeb.setLonwp10(values[0].getFloat(MessageHandlerFGFS.LONWP11));
 					myWeb.setLatwp11(values[0].getFloat(MessageHandlerFGFS.LATWP12));
 					myWeb.setLonwp11(values[0].getFloat(MessageHandlerFGFS.LONWP12));
-					
+										
 					myWeb.updateRange();
 					
 					
@@ -370,6 +370,9 @@ public class PanelView extends Activity {
 					mMFD777.setLonwp10(values[0].getFloat(MessageHandlerFGFS.LONWP11));
 					mMFD777.setLatwp11(values[0].getFloat(MessageHandlerFGFS.LATWP12));
 					mMFD777.setLonwp11(values[0].getFloat(MessageHandlerFGFS.LONWP12));
+					
+					mMFD777.setCurrentwp(values[0].getString(MessageHandlerFGFS.CURRENTWP));
+					mMFD777.setNumwp(values[0].getInt(MessageHandlerFGFS.NUMWP));
 					
 					//Check if the database needs update
 					if (mMFD777.plane.checkUpdateDBNeeded()) {

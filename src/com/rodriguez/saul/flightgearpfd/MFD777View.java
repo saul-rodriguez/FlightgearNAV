@@ -534,6 +534,15 @@ public class MFD777View extends SurfaceView implements SurfaceHolder.Callback {
 		plane.lonwp[11] = lo;
 	}
 	
+	void setCurrentwp(String cur)
+	{
+		plane.currentwp = cur;
+	}
+	
+	void setNumwp(int num)
+	{
+		plane.numwp = num;
+	}
 	
 	/*
 	void SetSpeed(float newSpeed) 

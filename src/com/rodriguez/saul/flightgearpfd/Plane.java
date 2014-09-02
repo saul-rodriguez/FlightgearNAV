@@ -75,6 +75,9 @@ public class Plane {
 	float[] latwp;
 	float[] lonwp;
 	final int ROUTESIZE = 12; //number if waypoints
+	
+	String currentwp;
+	int numwp;
 	/*
 	float horizontRollAngle;
 	float horizontPitchAngle;	

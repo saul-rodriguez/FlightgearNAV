@@ -453,7 +453,7 @@
     <name>current wp</name>
     <type>string</type>
     <format>%s</format>
-    <node>/autopilot/route-manager/wp/id</node>
+    <node>/autopilot/route-manager/wp</node>
    </chunk>
 
    <chunk>

@@ -122,6 +122,9 @@ public class MessageHandlerFGFS {
 	public static final int LATWP12 = 59;
 	public static final int LONWP12 = 60;
 	
+	public static final int CURRENTWP = 61;
+	public static final int NUMWP = 62;
+	
 	
 	public int getInt(int i) 
 	{
