@@ -496,7 +496,8 @@ public class Plane777 extends Plane {
 		drawWPtext(canvas, paint);
 		
 		//Hide borders
-		paint.setColor(Color.rgb(0xb6, 0xb2, 0xa7));
+		//paint.setColor(Color.rgb(0xb6, 0xb2, 0xa7));
+		paint.setColor(Color.BLACK);
 		paint.setStyle(Paint.Style.FILL_AND_STROKE);		
 		//canvas.drawRect((centerx - 380*scaleFactor), 0, (centerx - 256*scaleFactor), 2*centery, paint);
 		//canvas.drawRect((centerx + 256*scaleFactor), 0, (centerx + 380*scaleFactor), 2*centery, paint);
@@ -655,7 +656,8 @@ public class Plane777 extends Plane {
 		drawWPtext(canvas, paint);
 		
 		//Hide borders
-		paint.setColor(Color.rgb(0xb6, 0xb2, 0xa7));
+		//paint.setColor(Color.rgb(0xb6, 0xb2, 0xa7));
+		paint.setColor(Color.BLACK);
 		paint.setStyle(Paint.Style.FILL_AND_STROKE);		
 		//canvas.drawRect((centerx - 380*scaleFactor), 0, (centerx - 256*scaleFactor), 2*centery, paint);
 		//canvas.drawRect((centerx + 256*scaleFactor), 0, (centerx + 380*scaleFactor), 2*centery, paint);
@@ -1205,7 +1207,7 @@ public class Plane777 extends Plane {
 		bugMatrix.postTranslate(-bug.getWidth()/2, -bug.getHeight()/2);
 		bugMatrix.postScale((float)(0.3*scaleFactor), (float)(0.3*scaleFactor));
 		bugMatrix.postRotate(90);
-		bugMatrix.postTranslate(centerx + (int)(230*scaleFactor),centery + (float)((offsety-65 + 65*gsdef)*scaleFactor));
+		bugMatrix.postTranslate(centerx + (int)(230*scaleFactor),centery + (float)((offsety-65 - 65*gsdef)*scaleFactor));
 		
 		canvas.drawBitmap(bug, bugMatrix, paint);
 		
@@ -1240,7 +1242,7 @@ public class Plane777 extends Plane {
 		bugMatrix.postTranslate(-bug.getWidth()/2, -bug.getHeight()/2);
 		bugMatrix.postScale((float)(0.3*scaleFactor), (float)(0.3*scaleFactor));
 		bugMatrix.postRotate(90);
-		bugMatrix.postTranslate(centerx + (int)(230*scaleFactor),centery + (float)((offsety + 65*gsdef)*scaleFactor));
+		bugMatrix.postTranslate(centerx + (int)(230*scaleFactor),centery + (float)((offsety - 65*gsdef)*scaleFactor));
 		
 		canvas.drawBitmap(bug, bugMatrix, paint);
 		
