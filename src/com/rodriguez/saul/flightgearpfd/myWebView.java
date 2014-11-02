@@ -130,6 +130,11 @@ public class myWebView  extends WebView {
 		calcDistance(reflat,reflon,lat,lon);
 		dist2pixels();
 		
+		if (showmap == false) { //Correct distances for World hi charts
+			distx *= 0.375;
+			disty *= 0.375;				
+		}
+		
 		float aux;
 				
 		aux = (float)(1/2.54*dpi); //real height of plane = 1cm

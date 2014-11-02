@@ -202,9 +202,11 @@ public class MFD777View extends SurfaceView implements SurfaceHolder.Callback {
 			case BASIC: 
 		//				plane = new PlaneFree(mcontext);
 						plane = new Plane777(mcontext);
+						setPlaneType(planeType);
 						break;
 			case B777:  
 						plane = new Plane777(mcontext);
+						setPlaneType(planeType);
 						break;
 			case B787:  
 			//			plane = new Plane787(mcontext);
@@ -215,6 +217,8 @@ public class MFD777View extends SurfaceView implements SurfaceHolder.Callback {
 						
 			case A330:  
 				//		plane = new PlaneA330(mcontext);
+						plane = new Plane777(mcontext);
+						setPlaneType(planeType);
 						break;
 						
 			case A380:  
@@ -226,6 +230,11 @@ public class MFD777View extends SurfaceView implements SurfaceHolder.Callback {
 						
 		}
 		
+	}
+	
+	void setPlaneType(int planeType)
+	{
+		plane.planeType = planeType;
 	}
 	
 	void setHeading(float newHeading)

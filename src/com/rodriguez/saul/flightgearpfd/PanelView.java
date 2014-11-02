@@ -236,7 +236,16 @@ public class PanelView extends Activity {
 				
 				int mode = (values[0].getInt(MessageHandlerFGFS.MODE));
 				
-				if (displayFlag == MAP) {
+				//Default is 777, other planes need to change 
+				if (mMFD777.planeType == MFD777View.A330) {
+					if (mode == 4 ) { //PLAN is 4 in 333 whereas PLN is 3 in 777
+						mode = 3;
+					} else if(mode == 3) { // This will avoid that the Skyvector is triggered if ARC
+						mode = 2;
+					} 
+				}
+				
+				if (displayFlag == MAP) { //Currenly Skyvector map is on display
 					
 					if (mode < 3) { // Change to NAV
 						displayFlag = NAV;
@@ -374,6 +383,12 @@ public class PanelView extends Activity {
 					mMFD777.setCurrentwp(values[0].getString(MessageHandlerFGFS.CURRENTWP));
 					mMFD777.setNumwp(values[0].getInt(MessageHandlerFGFS.NUMWP));
 					
+					//Default plane is 777m other planes need to rearrange parameters
+					if (mMFD777.planeType == MFD777View.A330) {
+						rearrangeParamA330();				
+					}
+					
+					
 					//Check if the database needs update
 					if (mMFD777.plane.checkUpdateDBNeeded()) {
 						mMFD777.plane.updateDB();
@@ -388,6 +403,37 @@ public class PanelView extends Activity {
 	    	
 	    }
 
+		public void rearrangeParamA330()
+		{
+			switch (mMFD777.plane.mode) {
+				case 0:  //ILS
+						mMFD777.setModebut(true); //Circle						
+						break;
+						
+				case 1: //VOR
+						mMFD777.setModebut(true); //Circle						
+						break;
+				case 2: //NAV
+						mMFD777.setModebut(true); //Circle	
+						if (mMFD777.plane.switchvorl == 2)
+							mMFD777.setSwitchleft(-1);
+						if (mMFD777.plane.switchvorr == 2)
+							mMFD777.setSwitchright(-1);
+						break;
+				case 3: //ARC
+						mMFD777.setModebut(false); //Arc
+						mMFD777.setMode(2);
+						break;
+				case 4: break;
+				default: break;
+						
+			}
+			
+			
+			//ARC
+			
+		}
+		
 		public void loadNAVView() {
 			
 			

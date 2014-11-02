@@ -77,19 +77,19 @@ public class MainActivity extends Activity {
 		port = (EditText)findViewById(R.id.editTextPort);
 		instructions = (TextView)findViewById(R.id.textViewConf);
 		
-		m_port = 5502;
+		m_port = 5503;
 		port.setText(String.format("%d", m_port));
 		
 		//SetupSpinner
 		spinner1 = (Spinner)findViewById(R.id.spinner1);
 		
 		List<String> list = new ArrayList<String>();
-		list.add("BASIC");
+		list.add("BASIC (No available)");
 		list.add("Boeing 777");
-		list.add("Boeing 787-8");
-		list.add("Boeing 747-400");
+		list.add("Boeing 787-8 (No available)");
+		list.add("Boeing 747-400 (No available)");
 		list.add("Airbus 330");
-		list.add("Airbus 380");
+		list.add("Airbus 380 (No available)");
 		
 		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, list);
 		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -129,7 +129,7 @@ public class MainActivity extends Activity {
 	
 	public void onWebsite(View view)
 	{
-		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://sites.google.com/site/flightgearandroid/flightgear-pfd"));
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://sites.google.com/site/flightgearandroid/flightgear-mfd"));
 		startActivity(browserIntent);
 	}
 	
@@ -145,8 +145,9 @@ public class MainActivity extends Activity {
 		
 		text = "\nINSTRUCTIONS \n\n";
 		
-		text += "1 Download the protocol files from: https://sites.google.com/site/flightgearandroid/flightgear-pfd\n";
-		text += "2 Copy these files in the directory $FG_ROOT/Protocol/\n";
+		text += "1 Download the protocol and nasal files from: https://sites.google.com/site/flightgearandroid/flightgear-mfd\n";
+		text += "2.1 Copy the protocol files in the directory $FG_ROOT/Protocol/\n";
+		text += "2.2 Copy the nasal file androidnav.nas in the directory $FG_ROOT/Nasal/\n";
 		text += "3 Enable WiFi in your android device\n";
 		text += "4 Launch flightgear with the option: --generic=socket,out,[Frequency],[IP android],[port],udp,[protocol filename] where:\n";
 		text += "[Frequency] = Refresh rate in Hz\n";
@@ -154,10 +155,10 @@ public class MainActivity extends Activity {
 		text += "[port] = Port number (must match field PORT NUMBER entered above)\n";
 		text += "[protocol filename  without .xml] =  androidpfd777, androidpfd787, androidpfd330, androidpfd330, androidpfd747\n\n";
 		text += "Example:\n";
-		text += "fgfs --generic=socket,out,20,"+ ip +",5502,udp,androidpfd777\n";
+		text += "fgfs --generic=socket,out,20,"+ ip +",5503,udp,androidnav777\n";
 		text += "5 Wait until flightgear finishes to start (cockpit visible), and click “Connect” in the android device.\n\n";
 
-		text += "Detailed instructions available at:  https://sites.google.com/site/flightgearandroid/flightgear-pfd\n";
+		text += "Detailed instructions available at:  https://sites.google.com/site/flightgearandroid/flightgear-mfd\n";
 		
 		
 		instructions.setText(text);

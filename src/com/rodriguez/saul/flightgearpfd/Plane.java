@@ -5,6 +5,16 @@ import android.graphics.Canvas;
 
 public class Plane {
 
+	public static final int BASIC = 0;
+	public static final int B777 = 1;
+	public static final int B787 = 2;
+	public static final int B747 = 3;
+	public static final int A330 = 4;	
+	public static final int A380 = 5;
+	
+	int planeType;
+	
+	
 	public int centerx;
 	public int centery;
 	public float scaleFactor;

@@ -16,6 +16,8 @@ import android.graphics.Paint.Style;
 import android.util.Log;
 
 public class Plane777 extends Plane {
+	
+	
 
 	//Bitmap mask; defined in the base class!
 	Bitmap maskfull;
@@ -93,6 +95,9 @@ public class Plane777 extends Plane {
 	public Plane777(Context context) {
 		
 		mContext = context;
+		
+		//Default plane
+		planeType = B777;
 		
 		//Initialize the matrices;
 		maskMatrix = new Matrix();
@@ -1413,9 +1418,16 @@ public class Plane777 extends Plane {
 		
 		int count = 0;
 		
+		if (numwp > ROUTESIZE)
+			numwp = ROUTESIZE;
+		
 		for (int i = 0; i<numwp; i++ ){
 			//if (latwp[i] == 0 && lonwp[i] == 0)
 			//	break;
+			//Log.d("SAUL",String.format("Num WP = %d", numwp));
+			//Log.d("SAUL",String.format("Lat= %f Lon= %f ", lat, lon));
+			//Log.d("SAUL",String.format("Lat1= %f Lon1= %f ", latwp[0], lonwp[0]));
+			
 			
 			count++;
 			

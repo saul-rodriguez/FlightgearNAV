@@ -67,14 +67,14 @@
    <chunk>
     <name>switch left VOR ADF</name>
     <format>%d</format>
-    <node>/instrumentation/efis/inputs/lh-vor-adf</node>
+    <node>/instrumentation/efis/input/vor-adf-1</node>
    </chunk>
 
    <chunk>
     <name>NAV1 direction</name>
     <type>float</type>
     <format>%f</format>
-    <node>/instrumentation/efis/mfd/lvordirection</node>
+    <node>/instrumentation/nav/heading-deg</node>
    </chunk>
 
 <!-- NAV1 ends here -->
@@ -114,16 +114,16 @@
    </chunk>
 
    <chunk>
-    <name>switch left VOR ADF</name>
+    <name>switch right VOR ADF</name>
     <format>%d</format>
-    <node>/instrumentation/efis/inputs/rh-vor-adf</node>
+    <node>/instrumentation/efis/input/vor-adf-2</node>
    </chunk>
 
    <chunk>
-    <name>NAV1 direction</name>
+    <name>NAV2 direction</name>
     <type>float</type>
     <format>%f</format>
-    <node>/instrumentation/efis/mfd/rvordirection</node>
+    <node>/instrumentation/nav[1]/heading-deg</node>
    </chunk>
 
 <!-- NAV2 starts here -->
@@ -152,7 +152,7 @@
     <name>ADF1 direction</name>
     <type>float</type>
     <format>%f</format>
-    <node>/instrumentation/efis/mfd/ladfdirection</node>
+    <node>/instrumentation/adf/indicated-bearing-deg</node>
    </chunk>
 
 <!-- ADF1 ends here -->
@@ -181,7 +181,7 @@
     <name>ADF1 direction</name>
     <type>float</type>
     <format>%f</format>
-    <node>/instrumentation/efis/mfd/radfdirection</node>
+    <node>/instrumentation/adf[1]/indicated-bearing-deg</node>
    </chunk>
 
 <!-- ADF2 ends here -->
@@ -221,13 +221,13 @@
    <chunk>
     <name>Encoder Mode </name>
     <format>%d</format>
-    <node>/instrumentation/efis/mfd/mode-num</node>
+    <node>/instrumentation/efis/nd/display-mode-num</node>
    </chunk>
 
    <chunk>
     <name>range </name>
     <format>%d</format>
-    <node>/instrumentation/efis/inputs/range-nm</node>
+    <node>/instrumentation/nd/range</node>
    </chunk>
 
    <chunk>
