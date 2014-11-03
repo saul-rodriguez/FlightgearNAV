@@ -1051,7 +1051,8 @@ public class Plane777 extends Plane {
 	{
 		int offsety = 160; // y offset of the center of the arc
 		
-		float rotation = realheading - (float)(radial);
+		//float rotation = realheading - (float)(radial);
+		float rotation = heading - (float)(radial);
 				
 		// Draw radial arrows
 		radialupMatrix.reset();
@@ -1125,7 +1126,8 @@ public class Plane777 extends Plane {
 	{
 		int offsety = 25; // y offset of the center of the arc
 		
-		float rotation = realheading - (float)(radial);
+		//float rotation = realheading - (float)(radial);
+		float rotation = heading - (float)(radial);
 				
 		// Draw radial arrows
 		cirupMatrix.reset();
